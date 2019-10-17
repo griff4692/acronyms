@@ -19,7 +19,7 @@ def search(string, apikey, searchType='exact'):
     version = 'current'
     uri = "https://uts-ws.nlm.nih.gov"
     content_endpoint = "/rest/search/" + version
-    # get at ticket granting ticket for the session
+    # get a ticket granting ticket for the session
     AuthClient = Authentication(apikey)
     tgt = AuthClient.gettgt()
     results = []
@@ -28,10 +28,7 @@ def search(string, apikey, searchType='exact'):
     r = requests.get(uri+content_endpoint,params=query)
     r.encoding = 'utf-8'
     items  = json.loads(r.text)
-    jsonData = items["result"]
-    for result in jsonData["results"]:
-        results.append(result['name'])
-    return results
+    return items["result"]["results"]
 
 def _read_acronyms(acronyms_path):
     """
@@ -55,7 +52,7 @@ def download_acronym_pairs(acronyms_path, apikey, path):
     for acronym in _read_acronyms(acronyms_path):
         print(count, ': ', acronym)
         for result in search(acronym, apikey):
-            d[acronym].append(result)
+            d[acronym].append(result['name'])
         if count % 10 == 0:
             with open('json/' + str(count) + path, 'w') as f:
                 json.dump(d, f)
@@ -73,4 +70,4 @@ def merge_jsons(json_pattern):
         json.dump(d, f)
 
 if __name__ == "__main__":
-    # download_acronym_pairs(acronyms_path, apikey, path)
+    download_acronym_pairs(acronyms_path, apikey, path)
