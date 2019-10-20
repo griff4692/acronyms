@@ -6,11 +6,14 @@
 #################################################################################
 
 from __future__ import print_function
-from Authentication import *
+
+from collections import defaultdict
 import glob
-import requests
 import json
-import argparse
+import os
+
+from expansion_etl.source_mining.umls.Authentication import *
+
 
 def search(string, apikey, searchType='exact'):
     """
@@ -22,7 +25,6 @@ def search(string, apikey, searchType='exact'):
     # get a ticket granting ticket for the session
     AuthClient = Authentication(apikey)
     tgt = AuthClient.gettgt()
-    results = []
     ticket = AuthClient.getst(tgt)
     query = {'string':string,'ticket':ticket, 'searchType':searchType}
     r = requests.get(uri+content_endpoint,params=query)
@@ -30,26 +32,15 @@ def search(string, apikey, searchType='exact'):
     items  = json.loads(r.text)
     return items["result"]["results"]
 
-def _read_acronyms(acronyms_path):
-    """
-    read acronyms from txt file
-    return a gernerator
-    """
-    with open(acronyms_path, 'r') as f:
-        for line in f:
-            for i, char in enumerate(line):
-                if char.isdigit():
-                    yield line[:i-1]
-                    break
 
-def download_acronym_pairs(acronyms_path, apikey, path):
+def download_acronym_pairs(acronyms, apikey, path):
     """
     Download acronym pairs with the form of {'acronym1': 'meaning1',
     'meaning2'...} every 10 acronyms.
     """
     d = defaultdict(list)
     count = 1
-    for acronym in _read_acronyms(acronyms_path):
+    for acronym in acronyms:
         print(count, ': ', acronym)
         for result in search(acronym, apikey):
             d[acronym].append(result['name'])
@@ -61,6 +52,7 @@ def download_acronym_pairs(acronyms_path, apikey, path):
     with open('json/' + str(count) + path, 'w') as f:
         json.dump(d, f)
 
+
 def merge_jsons(json_pattern):
     d = {}
     for file_path in glob.glob(json_pattern):
@@ -69,5 +61,6 @@ def merge_jsons(json_pattern):
     with open('acronym_expansions_UMLS.json', 'w') as f:
         json.dump(d, f)
 
-if __name__ == "__main__":
-    download_acronym_pairs(acronyms_path, apikey, path)
+
+def extract_acronyms(acronyms):
+    return download_acronym_pairs(acronyms, os.environ['UMLS_API'], None)
