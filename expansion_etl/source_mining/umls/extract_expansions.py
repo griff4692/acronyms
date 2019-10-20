@@ -53,14 +53,20 @@ def download_acronym_pairs(acronyms, apikey, path):
         json.dump(d, f)
 
 
-def merge_jsons(json_pattern):
+def merge_jsons(json_pattern, out_fn):
     d = {}
     for file_path in glob.glob(json_pattern):
         with open(file_path, 'r') as f:
             d.update(json.load(f))
-    with open('acronym_expansions_UMLS.json', 'w') as f:
+    with open(out_fn, 'w') as f:
         json.dump(d, f)
 
 
-def extract_acronyms(acronyms):
+def extract_expansions(acronyms, use_cached=True):
+    print('Extracting expansions from UMLS...')
+    # TODO use_cached = True to avoid issues with this script
+    use_cached = True
+    out_fn = './data/derived/umls_acronym_expansions.json'
+    if use_cached and os.path.exists(out_fn):
+        return out_fn
     return download_acronym_pairs(acronyms, os.environ['UMLS_API'], None)

@@ -71,8 +71,6 @@ def add_cui(in_fp, use_cached=False):
     df['cui'] = cuis
     df['semtypes'] = semtypes
     df['semgroups'] = semgroups
-
     json.dump(SEMANTIC_GROUP_MAP, open('./data/derived/semantic_group_counts.json', 'w'))
-
     df.to_csv(out_fp, index=False)
     return out_fp

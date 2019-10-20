@@ -8,16 +8,15 @@ from utils import standardize_lower, standardize_upper
 NULL_LFS = ['no results']
 
 
-def merge_sources(sources, acronym_list, use_cached):
+def merge_sources(source_fns, acronym_list, use_cached=True):
     out_fn = './data/derived/merged_acronym_expansions.csv'
     if use_cached and os.path.exists(out_fn):
         return out_fn
 
     cols = ['sf', 'lf', 'source']
     df_arr = []
-    for src in sources:
-        in_fn = os.path.join('./data', 'derived', '{}_acronym_expansions.json'.format(src))
-        data = json.load(open(in_fn, 'r'))
+    for src, src_fn in source_fns:
+        data = json.load(open(src_fn, 'r'))
         print('Merging {} with {} acronyms + expansions ...'.format(src, len(data)))
         for sf, lfs in data.items():
             sf = standardize_upper(sf)

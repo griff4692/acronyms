@@ -1,14 +1,21 @@
-import json
-import re
 from collections import deque
+import json
+import os
+import re
 
 import wikipediaapi
+
+
+def remove_parens(str):
+    paren = re.compile(r'\([\w|\s]+\)')
+    return re.sub(paren, '', str).strip()
 
 
 class AcronymExpansionScraper:
     """
     This class encapsulates all the functionality related to scraping expansions for medical acronyms from Wikipedia
-    It makes use of the python wrapper over Wikimedia APIs - Wikipedia-API (https://github.com/martin-majlis/Wikipedia-API/)
+    It makes use of the python wrapper over Wikimedia APIs - Wikipedia-API
+    (https://github.com/martin-majlis/Wikipedia-API/)
     To install the wrapper package run "pip install wikipedia-api"
     """
 
@@ -73,40 +80,42 @@ class AcronymExpansionScraper:
                     return section.text.split('\n')
 
     @staticmethod
-    def load_abbreviations(file_name, threshold):
-        expansions_file = open(file_name, 'r')
-        lines = expansions_file.readlines()
-        abbreviations = []
-        for line in lines:
-            abbreviation = re.split(r'[\t\n]', line)
-            if int(abbreviation[1]) > threshold:
-                abbreviations.append(abbreviation[0])
-        return abbreviations
+    def format_wiki_output(sf, expansions):
+        expansions = list(map(lambda x: x.lower(), expansions))
+        splitters = re.compile(r'/|\bor\b|\band\b')
+        formatted_expansions = set()
+        for expansion_str in expansions:
+            sub_expansions = expansion_str.split(',')[0].strip()
+            sub_expansions = re.split(splitters, sub_expansions)
+            sub_expansions = list(map(lambda x: x.strip(), sub_expansions))
+            for se in sub_expansions:
+                if len(se) > 1 and not se == sf.lower():
+                    formatted_e = remove_parens(se)
+                    formatted_expansions.add(formatted_e)
+        return list(formatted_expansions)
 
-    @staticmethod
-    def format_wiki_output(expansions):
-        # Not Implemented Yet - Will have to split the expansions and definition and handle disjunctions
-        return expansions
+
+def extract_expansions(acronyms, use_cached=True):
+    print('Extracting expansions from Wikipedia...')
+    out_fn = './data/derived/wikipedia_acronym_expansions.json'
+    if use_cached and os.path.exists(out_fn):
+        return out_fn
+    expansion_scraper = AcronymExpansionScraper()
+    acronym_expansions = dict()
+    for acronym in acronyms:
+        try:
+            expansion_scraper.load_page(acronym)
+            medical_expansions = expansion_scraper.get_medical_expansions()
+            if medical_expansions:
+                medical_expansions_formatted = expansion_scraper.format_wiki_output(acronym, medical_expansions)
+                acronym_expansions[acronym] = medical_expansions_formatted
+        except:
+            pass
+    with open(out_fn, 'w') as fp:
+        json.dump(acronym_expansions, fp)
+    return out_fn
 
 
 if __name__ == '__main__':
-    sample_query = 'PT'
-
-    expansion_scraper = AcronymExpansionScraper()
-    abbreviations = expansion_scraper.load_abbreviations('abbreviation_counts.txt', 1)
-    abbreviations_count = len(abbreviations)
-    abbreviation_expansions = dict()
-    for idx, abbreviation in enumerate(abbreviations):
-        print(str(idx) + ' of ' + str(abbreviations_count))
-        try:
-            expansion_scraper.load_page(abbreviation)
-            medical_expansions = expansion_scraper.get_medical_expansions()
-            if medical_expansions:
-                medical_expansions_formatted = expansion_scraper.format_wiki_output(
-                    medical_expansions)  # Not Implemented Yet
-                abbreviation_expansions[abbreviation] = medical_expansions_formatted
-        except:
-            pass
-    with open('abbreviations.json', 'w') as fp:
-        json.dump(abbreviation_expansions, fp)
-    # print(str(abbreviation_expansions))
+    acronyms = json.load(open('../../data/derived/acronyms.json', 'r'))
+    extract_expansions(acronyms)
