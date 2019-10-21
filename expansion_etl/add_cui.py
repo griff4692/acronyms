@@ -1,7 +1,9 @@
 from collections import defaultdict
 import json
 import os
+import traceback
 
+import numpy as np
 import pandas as pd
 from pymetamap import MetaMap
 
@@ -13,9 +15,19 @@ GROUP_TO_SEMTYPES = defaultdict(list)
 SEMSF_TO_SEMTYPE = {}
 
 
+class ErrorConcept:
+    """
+    Sometimes pymetamap throws unknown error.  This will affect all in a batch.
+    Label them as errors with proper index before
+    """
+    def __init__(self, index):
+        self.index = index
+
+
 def parse_concepts(concepts):
-    if concepts is None:
-        return 'N/A'
+    if len(concepts) == 1 and type(concepts[0]) == ErrorConcept:
+        return 'error', 'error', 'error'
+
     cuis = set()
     semtypes = set()
     semgroups = set()
@@ -58,15 +70,50 @@ def add_cui(in_fp, use_cached=False):
 
     df = pd.read_csv(in_fp)
     cuis, semtypes, semgroups = [], [], []
-    for ridx, lf in enumerate(df['lf'].tolist()):
-        concepts = mm.extract_concepts(
-            [lf], derivational_variants=True, ignore_word_order=True, ignore_stop_phrases=True)
-        cui_str, type_str, group_str = parse_concepts(concepts[0])
-        cuis.append(cui_str)
-        semtypes.append(type_str)
-        semgroups.append(group_str)
-        if ridx + 1 % 100 == 0:
-            print('{} out of {}'.format(ridx + 1, df.shape[0]))
+
+    long_forms = df['lf'].tolist()
+    concepts = []
+
+    bsize = 100
+    batches = range(0, len(long_forms), bsize)
+    for bidx, start_idx in enumerate(batches):
+        end_idx = min(len(long_forms), start_idx + bsize)
+        lf_chunk = long_forms[start_idx:end_idx]
+        try:
+            c = mm.extract_concepts(lf_chunk, ids=list(range(start_idx, end_idx)), derivational_variants=True,
+                                    ignore_word_order=True, ignore_stop_phrases=True)[0]
+        except Exception as e:
+            print("Type error = {}".format(str(e)))
+            print(traceback.format_exc())
+            c = [ErrorConcept(i) for i in range(start_idx, end_idx)]
+        concepts += c
+        print('Processed batch {} out of {}'.format(bidx + 1, len(batches)))
+
+    np.save(open('tmp.npy', 'w'), concepts)
+    prev_id = -1
+    curr_concepts = []
+    for concept in concepts:
+        curr_id = int(concept.index)
+        if curr_id == prev_id:
+            curr_concepts.append(concept)
+        else:
+            if len(curr_concepts) > 0:
+                cui_str, type_str, group_str = parse_concepts(curr_concepts)
+                assert int(curr_concepts[-1].index) == len(cuis)
+                cuis.append(cui_str)
+                semtypes.append(type_str)
+                semgroups.append(group_str)
+            for _ in range(prev_id + 1, curr_id):
+                cuis.append(NULL_CUI)
+                semtypes.append(NULL_CUI)
+                semgroups.append(NULL_CUI)
+            prev_id = curr_id
+            curr_concepts = [concept]
+    # Process Last batch
+    cui_str, type_str, group_str = parse_concepts(curr_concepts)
+    cuis.append(cui_str)
+    semtypes.append(type_str)
+    semgroups.append(group_str)
 
     df['cui'] = cuis
     df['semtypes'] = semtypes
