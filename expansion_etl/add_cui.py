@@ -3,7 +3,6 @@ import json
 import os
 import traceback
 
-import numpy as np
 import pandas as pd
 from pymetamap import MetaMap
 
@@ -24,7 +23,42 @@ class ErrorConcept:
         self.index = index
 
 
+def patch_batch_errors(df, mm):
+    """
+    pymetamap sometimes makes errors. Since we process in batch,
+    this means we don't get the results for an entire batch.
+    The solution is to look for CUIS we've inserted with dummy ErrorConcept
+    and try to re-run pymetamap on these examples individually.
+    """
+    error_df = df[df['cui'] == 'error']
+    error_row_ids = error_df.index.tolist()
+
+    print('Re-processing {} rows with potential errors.'.format(len(error_row_ids)))
+    cols = df.columns.tolist()
+    cui_idx = cols.index('cui')
+    types_idx = cols.index('semtypes')
+    groups_idx = cols.index('semgroups')
+
+    lfs = error_df['lf'].tolist()
+    for lf, row_idx in zip(lfs, error_row_ids):
+        try:
+            concepts = mm.extract_concepts(
+                [lf], derivational_variants=True, ignore_word_order=True, ignore_stop_phrases=True)[0]
+            cui_str, type_str, group_str = parse_concepts(concepts)
+        except Exception as e:
+            print("Type error = {}".format(str(e)))
+            print(traceback.format_exc())
+            cui_str, type_str, group_str = NULL_CUI, NULL_CUI, NULL_CUI
+        df.iat[row_idx, cui_idx] = cui_str
+        df.iat[row_idx, types_idx] = type_str
+        df.iat[row_idx, groups_idx] = group_str
+    assert len(df[df['cui'] == 'error']) == 0
+
+
 def parse_concepts(concepts):
+    if len(concepts) == 0:
+        return NULL_CUI, NULL_CUI, NULL_CUI
+
     if len(concepts) == 1 and type(concepts[0]) == ErrorConcept:
         return 'error', 'error', 'error'
 
@@ -89,7 +123,6 @@ def add_cui(in_fp, use_cached=False):
         concepts += c
         print('Processed batch {} out of {}'.format(bidx + 1, len(batches)))
 
-    # np.save(open('tmp.npy', 'wb'), concepts)
     prev_id = -1
     curr_concepts = []
     for concept in concepts:
@@ -118,6 +151,8 @@ def add_cui(in_fp, use_cached=False):
     df['cui'] = cuis
     df['semtypes'] = semtypes
     df['semgroups'] = semgroups
+    patch_batch_errors(df, mm)
+
     json.dump(SEMANTIC_GROUP_MAP, open('./data/derived/semantic_group_counts.json', 'w'))
     df.to_csv(out_fp, index=False)
     return out_fp
