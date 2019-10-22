@@ -18,3 +18,5 @@ def standardize_upper(str):
 
 def standardize_lower(str):
     return remove_punctuation(str).strip().lower()
+
+

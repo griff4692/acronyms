@@ -1,11 +1,14 @@
 import json
 import os
+from nltk.corpus import stopwords
 import pandas as pd
 
 from utils import standardize_lower, standardize_upper
 
 
-NULL_LFS = ['no results']
+NULL_LF = 'no results'
+STOPWORDS = set(stopwords.words('english'))
+STOPWORDS.add(NULL_LF)
 
 
 def merge_sources(source_fns, acronym_list, use_cached=True):
@@ -23,7 +26,7 @@ def merge_sources(source_fns, acronym_list, use_cached=True):
             if sf in acronym_list:
                 lfs = list(set(list(map(standardize_lower, lfs))))
                 for lf in lfs:
-                    if lf not in NULL_LFS:
+                    if lf not in STOPWORDS:
                         df_arr.append([
                             sf,
                             lf,
@@ -33,7 +36,7 @@ def merge_sources(source_fns, acronym_list, use_cached=True):
     df = pd.DataFrame(df_arr, columns=cols)
     df.drop_duplicates(inplace=True)
     df.sort_values(['sf', 'lf', 'source'], inplace=True)
-    dfg = df.groupby(['sf', 'lf']).agg({ 'source': lambda x: ','.join(list(x))}).reset_index()
+    dfg = df.groupby(['sf', 'lf']).agg({ 'source': lambda x: '|'.join(list(x))}).reset_index()
     dfg.to_csv(out_fn, index=False)
     print('Merged {} acronym-expansion pairs.'.format(dfg.shape[0]))
     return out_fn

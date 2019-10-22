@@ -4,12 +4,12 @@ import argparse
 
 from add_cui import add_cui
 from extract_acronyms_list import extract_acronyms_list
+from merge_cuis import merge_lfs_by_cui
 from merge_sources import merge_sources
-from utils import render_args
-
 from source_mining.pubmed.extract_expansions import extract_expansions as extract_pubmed_expansions
 from source_mining.umls.extract_expansions import extract_expansions as extract_umls_expansions
 from source_mining.wikipedia.extract_expansions import extract_expansions as extract_wikipedia_expansions
+from utils import render_args
 
 SOURCE_EXTRACTION_MAP = {
     'pubmed': extract_pubmed_expansions,
@@ -27,7 +27,9 @@ def etl(args, sources, fp):
     merged_fp = merge_sources(zip(sources, list(source_fns)), acronym_list, use_cached=args.use_cached)
     print('Adding UMLS Concepts with MetaMap...')
     cui_fp = add_cui(merged_fp, use_cached=args.use_cached)
-    print(cui_fp)
+    print('Merging Acronym-Expansion pairs that share the same set of UMLS Concepts...')
+    cui_merged_fp = merge_lfs_by_cui(cui_fp, use_cached=args.use_cached)
+    return cui_merged_fp
 
 
 if __name__ == '__main__':
@@ -40,4 +42,5 @@ if __name__ == '__main__':
 
     initial_fp = 'data/original/initial_acronyms.txt'
     sources = args.sources.split(',')
-    etl(args, sources, initial_fp)
+    final_fn = etl(args, sources, initial_fp)
+    print('Final dataset is located --> {}'.format(final_fn))

@@ -89,7 +89,7 @@ def add_cui(in_fp, use_cached=False):
         concepts += c
         print('Processed batch {} out of {}'.format(bidx + 1, len(batches)))
 
-    np.save(open('tmp.npy', 'w'), concepts)
+    # np.save(open('tmp.npy', 'wb'), concepts)
     prev_id = -1
     curr_concepts = []
     for concept in concepts:

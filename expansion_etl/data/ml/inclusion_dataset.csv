@@ -1,0 +1,301 @@
+sf,cui,lf,source,semtypes,semgroups,is_train
+HNE,C0064833|C0205177|C0443467|C1414369|C3853793|C3888249|C4321237|C4551701,high levels of active neutrophil elastase,pubmed,"Amino Acid, Peptide, or Protein|Enzyme|Finding|Gene or Genome|Idea or Concept|Qualitative Concept",Chemicals & Drugs|Concepts & Ideas|Disorders|Genes & Molecular Sequences,0
+LDR,C0013621|C0023185|C0680238|C0681814|C1706386,learner disagreement from experiment resampling,pubmed,Conceptual Entity|Educational Activity|Mental Process|Research Activity|Social Behavior,Activities & Behaviors|Concepts & Ideas|Physiology|Procedures,0
+ADP,C0032400|C0071360|C0332265|C0335296|C0747726|C1879547|C4552596,activation demonstrated by poly,pubmed,"Activity|Conceptual Entity|Functional Concept|Nucleic Acid, Nucleoside, or Nucleotide|Professional or Occupational Group",Activities & Behaviors|Chemicals & Drugs|Concepts & Ideas|Living Beings,0
+BPL,C0023047|C0325581|C0998565,boettcherisca peregrine larvae,pubmed,Bird|Eukaryote,Living Beings,0
+GE,C0200044,gynaecological examination,pubmed,Health Care Activity,Procedures,0
+TBD,C0075804|C1511331,tandem bromodomain,pubmed,Amino Acid Sequence|Organic Chemical|Pharmacologic Substance,Chemicals & Drugs|Genes & Molecular Sequences,0
+PLT,C0030705|C0042444|C0243148|C0332293|C0348005|C1550141|C1882979|C2587213|C3274648|C4553389,patients treated with its vehicle control,pubmed,Biomedical or Dental Material|Conceptual Entity|Functional Concept|Manufactured Object|Patient or Disabled Group|Qualitative Concept|Substance|Therapeutic or Preventive Procedure,Chemicals & Drugs|Concepts & Ideas|Living Beings|Objects|Procedures,0
+PARS,C0023689|C0035549|C0137710|C4522002,poly adenosine 5diphosphate ribose synthetase,pubmed,"Amino Acid, Peptide, or Protein|Enzyme|Nucleic Acid, Nucleoside, or Nucleotide|Organic Chemical|Qualitative Concept",Chemicals & Drugs|Concepts & Ideas,0
+DE,C0441471|C4019010,dermatological event,pubmed,Clinical Attribute|Event,Activities & Behaviors|Physiology,0
+DSW,C0205148|C0678544|C1421479,dyakonov surface wave,pubmed,Gene or Genome|Natural Phenomenon or Process|Spatial Concept,Concepts & Ideas|Genes & Molecular Sequences|Phenomena,0
+CAPP,C0003483|C0030375|C0063017|C0205099|C1879652|C4319755,central aortic pp,pubmed,"Amino Acid, Peptide, or Protein|Biologically Active Substance|Body Part, Organ, or Organ Component|Gene or Genome|Geographic Area|Laboratory Procedure|Spatial Concept",Anatomy|Chemicals & Drugs|Concepts & Ideas|Genes & Molecular Sequences|Geographic Areas|Procedures,0
+PEM,C0449381|C0549193|C1704769|C2350001,parametric expectationmaximisation,pubmed,Conceptual Entity|Finding|Quantitative Concept,Concepts & Ideas|Disorders,0
+WAR,C1710670,whole abdominal irradiation,pubmed,Therapeutic or Preventive Procedure,Procedures,0
+NP,C0032002|C0032005|C0205307|C0231683|C0439166|C2347086|C4553972,normal pituitary,pubmed,"Body Part, Organ, or Organ Component|Disease or Syndrome|Finding|Intellectual Product|Qualitative Concept|Quantitative Concept",Anatomy|Concepts & Ideas|Disorders,0
+LS,C0301571|C0302908|C1304698|C1442989|C1546699|C1561501|C2828392|C4521998,liquid standard,pubmed,Finding|Intellectual Product|Qualitative Concept|Substance|Therapeutic or Preventive Procedure,Concepts & Ideas|Disorders|Objects|Procedures,0
+INH,C0868928|C1533148,in these cases,pubmed,Functional Concept|Quantitative Concept,Concepts & Ideas,0
+UVL,C0006409|C0041625|C0392223|C1961129,uv lamps,pubmed,Geographic Area|Manufactured Object|Natural Phenomenon or Process|Quantitative Concept,Concepts & Ideas|Geographic Areas|Objects|Phenomena,0
+ADA,C0001128|C0202406,azetidine24dicarboxylic acid|aminodecanoic acid,pubmed,Chemical|Laboratory Procedure,Chemicals & Drugs|Procedures,0
+PTS,C0038435|C1718621,posttraumatic stress|posttemperature stress|posttraumatic stress symptomatology,pubmed,Clinical Attribute|Finding,Disorders|Physiology,0
+GP,C0423693,growing pains,pubmed,Sign or Symptom,Disorders,0
+FTLD,C0751072|C3811918,frontotemporal lobar degeneration|frontotemporal lobe degeneration,"pubmed,umls",Disease or Syndrome|Mental or Behavioral Dysfunction,Disorders,0
+SIS,C0085862|C0205423|C0220908|C0220909|C1698960|C1710031|C1710032|C1710477|C2348164,sure independence screening,pubmed,Diagnostic Procedure|Functional Concept|Health Care Activity|Idea or Concept|Qualitative Concept|Research Activity,Concepts & Ideas|Procedures,0
+AN,C0003241,antibodies with,pubmed,"Amino Acid, Peptide, or Protein|Immunologic Factor|Pharmacologic Substance",Chemicals & Drugs,0
+CFC,C0108411|C0181797|C0946010|C1704654|C4319645|C4552854,carbon fiber cylinder,pubmed,Biomedical or Dental Material|Eukaryote|Medical Device|Organic Chemical|Quantitative Concept|Spatial Concept,Chemicals & Drugs|Concepts & Ideas|Devices|Living Beings,0
+ARD,C0184661|C0205554|C2347946|C2700391|C3274430|C3539779,automatic relevance procedure,pubmed,Functional Concept|Health Care Activity|Intellectual Product|Qualitative Concept|Therapeutic or Preventive Procedure,Concepts & Ideas|Procedures,0
+TBI,C0162536,tetrapolar bioelectrical impedance,pubmed,Physiologic Function,Physiology,0
+SPP,C0074764,sodium pyrophosphate,pubmed,Inorganic Chemical|Pharmacologic Substance,Chemicals & Drugs,0
+EGC,C0017725|C0079318,euglycemic glucose clamp,pubmed,Biologically Active Substance|Organic Chemical|Pharmacologic Substance|Research Device,Chemicals & Drugs|Devices,0
+TSC,C0037855,the spermatic cord,pubmed,"Body Part, Organ, or Organ Component",Anatomy,0
+BBD,C0005680|C0027567|C0085756|C0175723|C0439541|C0439645|C1521913,black band,pubmed,Cell Component|Medical Device|Population Group|Qualitative Concept|Spatial Concept,Anatomy|Concepts & Ideas|Devices|Living Beings,0
+CT,C0243148|C1550141|C1882979|C2587213|C3274648|C4553389,controls was the rs760761|control  taurine|control|controls,pubmed,Conceptual Entity|Functional Concept|Qualitative Concept|Substance,Concepts & Ideas|Objects,0
+CCS,C0205210|C0243148|C1550141|C1882979|C2587213|C3274648|C4553389,clinical controls,pubmed,Conceptual Entity|Functional Concept|Qualitative Concept|Substance,Concepts & Ideas|Objects,0
+FG,C0015852|C0086767|C0949314|C1119918|C3179180,fermented ginseng,pubmed,Medical Device|Molecular Function|Organic Chemical|Pharmacologic Substance|Plant,Chemicals & Drugs|Devices|Living Beings|Physiology,0
+FED,C0037313|C0332173|C0424522|C0870882|C4050403,fourhour ee sleeping metabolic rate daily,pubmed,Finding|Intellectual Product|Organism Function|Physiologic Function|Temporal Concept,Concepts & Ideas|Disorders|Physiology,0
+ONS,C0439583,overnight stay,pubmed,Temporal Concept,Concepts & Ideas,0
+STE,C0038228|C3496118,stearate,pubmed,Organic Chemical|Pharmacologic Substance,Chemicals & Drugs,0
+GND,C2936467,graphitized nanodiamond|graphited nanodiamond,pubmed,Manufactured Object,Objects,0
+PAE,C0001963|C0202308|C2828366|C3339441,phlomis anisodonta methanolic extract,pubmed,Hazardous or Poisonous Substance|Laboratory Procedure|Organic Chemical|Plant|Substance,Chemicals & Drugs|Living Beings|Objects|Procedures,0
+POE,C0024109|C0028908|C0032085|C0034065|C0333226|C1517288|C2707265|C2709248|C3541397|C4522268,pulmonary oil embolism,pubmed,"Acquired Abnormality|Biologically Active Substance|Body Part, Organ, or Organ Component|Clinical Attribute|Finding|Food|Organic Chemical|Pathologic Function|Pharmacologic Substance|Qualitative Concept",Anatomy|Chemicals & Drugs|Concepts & Ideas|Disorders|Objects|Physiology,0
+MINI,C0031330|C0205234|C0332185|C1285542|C1524059|C3161035|C3274659|C3714583|C3853906,model in pharmacology is recently focused on,pubmed,Biomedical Occupation or Discipline|Conceptual Entity|Functional Concept|Intellectual Product|Spatial Concept|Temporal Concept,Concepts & Ideas|Occupations,0
+FS,C0016745|C1948023,fructose stimulated,pubmed,Natural Phenomenon or Process|Organic Chemical|Pharmacologic Substance,Chemicals & Drugs|Phenomena,0
+CARS,C0335290|C0681889|C1516691,cognitive appraisal rating scale,pubmed,Functional Concept|Intellectual Product|Professional or Occupational Group|Quantitative Concept,Concepts & Ideas|Living Beings,0
+ETD,C0015392|C0546881|C0700042|C2987487,eye tracking deficits,pubmed,"Body Location or Region|Body Part, Organ, or Organ Component|Qualitative Concept|Spatial Concept",Anatomy|Concepts & Ideas,0
+SH,C0222041|C1948022,shell,pubmed,"Body Part, Organ, or Organ Component|Qualitative Concept",Anatomy|Concepts & Ideas,0
+COPS,C0032594|C2348281,coreplusoantigen polysaccharide|coreo polysaccharide,pubmed,Organic Chemical|Pharmacologic Substance,Chemicals & Drugs,0
+PSP,C0137909,polysulphone,pubmed,Biomedical or Dental Material|Organic Chemical,Chemicals & Drugs,0
+FPM,C0016315|C1720884,fluorescing particulate matter,pubmed,Natural Phenomenon or Process|Substance,Objects|Phenomena,0
+MPT,C0162703|C0234252|C0443254|C0449864,mechanical pain threshold|mechanical pain thresholds,pubmed,Finding|Functional Concept|Qualitative Concept|Sign or Symptom,Concepts & Ideas|Disorders,0
+SCR,C0009924|C0301630|C0392756|C0439691|C1293152|C1979874|C4551656,speckle contrast reduction,pubmed,"Indicator, Reagent, or Diagnostic Aid|Natural Phenomenon or Process|Qualitative Concept|Therapeutic or Preventive Procedure",Chemicals & Drugs|Concepts & Ideas|Phenomena|Procedures,0
+SE,C0229671|C0534628|C1332771|C1546774|C1550100|C1705207|C3887702,serum endostatin,pubmed,"Amino Acid, Peptide, or Protein|Biologically Active Substance|Body Substance|Gene or Genome|Intellectual Product|Pharmacologic Substance",Anatomy|Chemicals & Drugs|Concepts & Ideas|Genes & Molecular Sequences,0
+HS,C0599395|C0683862|C0870649,high school,pubmed,Intellectual Product|Manufactured Object|Organization|Population Group,Concepts & Ideas|Living Beings|Objects|Organizations,0
+NONE,C0441471|C0441472|C0871261|C1704632|C1706817|C1883727|C2911692|C3266814|C4019010,none  action taken in response to the event,umls,Activity|Clinical Attribute|Conceptual Entity|Event|Finding|Functional Concept|Intellectual Product|Mental Process|Organism Attribute,Activities & Behaviors|Concepts & Ideas|Disorders|Physiology,0
+RTV,C1550177|C1710633,real time viewer,pubmed,Manufactured Object|Temporal Concept,Concepts & Ideas|Objects,0
+TSP,C0681842,twostep prediction,pubmed,Idea or Concept,Concepts & Ideas,0
+LVDD,C0012000|C0225897|C1301886,left ventricular diastolic diameter|left ventricle diastolic diameter,pubmed,"Body Part, Organ, or Organ Component|Clinical Attribute|Quantitative Concept",Anatomy|Concepts & Ideas|Physiology,0
+PFM,C0011392,porcelain fusedtometal,pubmed,Biomedical or Dental Material|Inorganic Chemical,Chemicals & Drugs,0
+RE,C0004135|C0013470|C0337184|C2708180|C4318483,restrained eaters,pubmed,Clinical Attribute|Disease or Syndrome|Finding|Medical Device|Organism Function,Devices|Disorders|Physiology,0
+TOTAL,C0003241|C0030705|C0229671|C1151254|C1547282,the sera of patients we showed that antimlv antibodies,pubmed,"Amino Acid, Peptide, or Protein|Animal|Body Substance|Immunologic Factor|Molecular Function|Patient or Disabled Group|Pharmacologic Substance",Anatomy|Chemicals & Drugs|Living Beings|Physiology,0
+TTI,C0589507|C1158830|C1704686,to initiation,pubmed,Functional Concept|Genetic Function|Mental Process,Concepts & Ideas|Physiology,0
+ET,C0014245|C0041447|C0442418,endoscopic tympanoplasty,pubmed,Diagnostic Procedure|Spatial Concept|Therapeutic or Preventive Procedure,Concepts & Ideas|Procedures,0
+WAVE,C0033684,waspfamily verprolinhomologous protein,pubmed,"Amino Acid, Peptide, or Protein|Biologically Active Substance",Chemicals & Drugs,0
+OHP,C0018735|C0029162|C0242456|C0442027|C3862630|C4521986,oral health policy,pubmed,Educational Activity|Finding|Intellectual Product|Regulation or Law|Spatial Concept,Concepts & Ideas|Disorders|Procedures,0
+SC,C0007634|C0038814|C1413336|C1704653|C1948049|C3249880,sunburn cell,pubmed,Cell|Finding|Gene or Genome|Injury or Poisoning|Medical Device|Spatial Concept,Anatomy|Concepts & Ideas|Devices|Disorders|Genes & Molecular Sequences,0
+VOL,C0023216|C0439656|C1140621|C1511572|C3543419,voluntary leg cycling,pubmed,"Body Part, Organ, or Organ Component|Individual Behavior|Intellectual Product|Temporal Concept",Activities & Behaviors|Anatomy|Concepts & Ideas,0
+SEPS,C0234133|C0439655|C2979880,subjective extrapyramidal symptoms,pubmed,Clinical Attribute|Qualitative Concept|Sign or Symptom,Concepts & Ideas|Disorders|Physiology,0
+SPC,C1442758,surfactant protein c|sftpc gene,"pubmed,umls",Gene or Genome,Genes & Molecular Sequences,0
+FSP,C0733440,fosinopril sodium,pubmed,Organic Chemical|Pharmacologic Substance,Chemicals & Drugs,0
+DS,C0234451,deep sleep lt4hz,pubmed,Physiologic Function,Physiology,0
+ROMA,C0002778|C0936012|C1524024|C4699993,runoff transcriptionmicroarray analysis,pubmed,Functional Concept|Laboratory Procedure|Research Activity|Spatial Concept,Concepts & Ideas|Procedures,0
+OLD,C0175659|C0349674|C1947916|C2729544|C3245503,on national scale several legend,pubmed,Activity|Intellectual Product|Medical Device|Organic Chemical|Pharmacologic Substance|Population Group,Activities & Behaviors|Chemicals & Drugs|Concepts & Ideas|Devices|Living Beings,0
+PY,C0030428|C3538810,py|py tpslo2fe,"wikipedia,pubmed",Geographic Area|Idea or Concept,Concepts & Ideas|Geographic Areas,0
+DPM,C0025558|C0439228|C0687676|C1704687|C3469826,days post metamorphosis,pubmed,Gene or Genome|Manufactured Object|Organism Function|Temporal Concept,Concepts & Ideas|Genes & Molecular Sequences|Objects|Physiology,0
+SDE,C0015252|C0205420|C0449341|C0521115|C0728940|C1548968|C2718007,simultaneous distillation extraction technique,pubmed,Idea or Concept|Intellectual Product|Laboratory Procedure|Temporal Concept|Therapeutic or Preventive Procedure,Concepts & Ideas|Procedures,0
+CPH,C0205351|C0598697|C1565830,cox proportional hazard|cox proportional hazards|coxs proportional hazards,pubmed,"Amino Acid, Peptide, or Protein|Enzyme|Qualitative Concept",Chemicals & Drugs|Concepts & Ideas,0
+IDS,C1292856|C1948023,intraduodenal stimulation,pubmed,Natural Phenomenon or Process|Therapeutic or Preventive Procedure,Phenomena|Procedures,0
+NOD,C0028259|C0228505,nodules at all|nodules,pubmed,"Acquired Abnormality|Body Part, Organ, or Organ Component",Anatomy|Disorders,0
+HBSS,C0018834|C0175659|C0349674|C0457451|C1947916,heartburn severity scoring scale,pubmed,Activity|Intellectual Product|Medical Device|Quantitative Concept|Sign or Symptom,Activities & Behaviors|Concepts & Ideas|Devices|Disorders,0
+COT,C0008051|C0009629|C0677521|C1365945,chicken ovotransferrin,pubmed,"Amino Acid, Peptide, or Protein|Biologically Active Substance|Bird|Food",Chemicals & Drugs|Living Beings|Objects,0
+MON,C1335168,mucinous ovarian neoplasms,pubmed,Neoplastic Process,Disorders,0
+OD,C2014414,orthopaedic disease,pubmed,Disease or Syndrome,Disorders,0
+WIN,C0006104|C0444312|C2937302,wicked brain,pubmed,"Body Part, Organ, or Organ Component|Manufactured Object|Medical Device",Anatomy|Devices|Objects,0
+CVA,C0086045|C0205177|C0205419|C0439167|C0441655|C0936012|C1266129|C1561536|C3668946|C4049938|C4049939|C4553172,concentrations to 34 for alt activity analytical variation,pubmed,Activity|Finding|Idea or Concept|Intellectual Product|Laboratory Procedure|Mental Process|Neoplastic Process|Qualitative Concept|Quantitative Concept|Research Activity|Therapeutic or Preventive Procedure,Activities & Behaviors|Concepts & Ideas|Disorders|Physiology|Procedures,0
+IVCD,C0018827|C0026820|C1522565,intraleft ventricular contractile dyssynchrony,pubmed,"Body Part, Organ, or Organ Component|Physiologic Function|Spatial Concept",Anatomy|Concepts & Ideas|Physiology,0
+SBPS,C1849718|C2348205|C2740858,similar bps,pubmed,Disease or Syndrome|Organic Chemical|Pharmacologic Substance|Qualitative Concept,Chemicals & Drugs|Concepts & Ideas|Disorders,0
+AFS,C0225328|C1293132|C1624581,anchoring fibrils,pubmed,Cell Component|Molecular Function|Therapeutic or Preventive Procedure,Anatomy|Physiology|Procedures,0
+IT,C0336791|C0456642|C2827396,introducer tool,pubmed,Manufactured Object|Medical Device,Devices|Objects,0
+CSS,C0600367|C0947630,communitybased studies on seroprevalence,pubmed,Laboratory Procedure|Research Activity,Procedures,0
+HIP,C1440700,hippuran,pubmed,"Amino Acid, Peptide, or Protein|Biologically Active Substance",Chemicals & Drugs,0
+DMA,C0443254|C0729333|C0947630,dynamic mechanical studies,pubmed,Functional Concept|Laboratory Procedure,Concepts & Ideas|Procedures,0
+DOC,C0205177|C0369114|C0439167|C0439175|C0439810|C0441655|C1561536|C3668946|C4049938|C4049939,diacetate fdahydrolytic activity and the total,pubmed,Activity|Finding|Idea or Concept|Intellectual Product|Laboratory Procedure|Organic Chemical|Qualitative Concept|Quantitative Concept,Activities & Behaviors|Chemicals & Drugs|Concepts & Ideas|Disorders|Procedures,0
+PP,C0032712|C0523843|C1704241,porphyrin complexes ptme,pubmed,Biologically Active Substance|Chemical Viewed Structurally|Laboratory Procedure|Organic Chemical,Chemicals & Drugs|Procedures,0
+III,C0205224|C0521163,it is essentially convex and,pubmed,Qualitative Concept|Spatial Concept,Concepts & Ideas,0
+LSE,C1059156,lagerstroemia speciosa,pubmed,Plant,Living Beings,0
+ATS,C1100858,adenosine transporters,pubmed,"Amino Acid, Peptide, or Protein|Biologically Active Substance",Chemicals & Drugs,0
+SCL,C0205199|C0678594|C1547335,structural composite lumber,"wikipedia,pubmed",Idea or Concept|Qualitative Concept|Spatial Concept,Concepts & Ideas,0
+DM,C0199526,diffusing capacity of the membrane,pubmed,Diagnostic Procedure,Procedures,0
+PRI,C0439531|C1948053,period,pubmed,Temporal Concept,Concepts & Ideas,0
+SNI,C0021941|C0027552|C0031213|C0037967|C0686904,spiritual needs inventory,pubmed,Diagnostic Procedure|Functional Concept|Idea or Concept|Manufactured Object|Qualitative Concept,Concepts & Ideas|Objects|Procedures,0
+GPA,C0205143,glenopolar angle,"wikipedia,pubmed",Spatial Concept,Concepts & Ideas,0
+MIT,C0021485|C0033972|C0439064|C0444472|C1272883|C1533685|C1828121|C4049935,multiple injection therapy,pubmed,Biomedical or Dental Material|Functional Concept|Quantitative Concept|Therapeutic or Preventive Procedure,Chemicals & Drugs|Concepts & Ideas|Procedures,0
+CHG,C0017243|C0205195|C0376667|C1382104|C2828366|C3146288,combined herbal extracts gel,pubmed,Biomedical or Dental Material|Intellectual Product|Qualitative Concept|Substance,Chemicals & Drugs|Concepts & Ideas|Objects,1
+TAU,C0018827|C0035028|C0871208|C1521828|C1522565,the rate of ventricular relaxation,pubmed,"Activity|Body Part, Organ, or Organ Component|Quantitative Concept|Spatial Concept",Activities & Behaviors|Anatomy|Concepts & Ideas,1
+TO,C0029988|C0042874|C3255108|C3669135,tocopherol oxalate,pubmed,Organic Chemical|Pharmacologic Substance|Vitamin,Chemicals & Drugs,1
+TOT,C0205099|C0577559|C0577573|C1096155|C1306372|C3152252|C3539882|C3810851|C4283905,the centre of mass the e,pubmed,Disease or Syndrome|Finding|Intellectual Product|Quantitative Concept|Sign or Symptom|Spatial Concept,Concepts & Ideas|Disorders,1
+BOS,C0039082,bronchoobstructive syndrome|buschkeollendorf syndrome|buschkeollendorff syndrome,pubmed,Disease or Syndrome,Disorders,1
+FDI,C0021212|C0030234|C0205125|C0424612|C1235732|C1522602|C1708004|C3887682,fat depth indicator,pubmed,"Amino Acid, Peptide, or Protein|Biologically Active Substance|Bird|Functional Concept|Gene or Genome|Indicator, Reagent, or Diagnostic Aid|Organic Chemical|Organism Attribute|Receptor|Spatial Concept",Chemicals & Drugs|Concepts & Ideas|Genes & Molecular Sequences|Living Beings|Physiology,1
+AHC,C0008902|C0008903|C0678229|C0699032,agglomerative hierarchical classification,pubmed,Classification|Functional Concept|Occupational Activity,Activities & Behaviors|Concepts & Ideas,1
+PHI,C0175996|C0178719|C1138565,ph gradient between the intracellular,pubmed,Cell Component|Quantitative Concept|Spatial Concept,Anatomy|Concepts & Ideas,1
+DCMP,C0057539,desmethylclomipramine,pubmed,Organic Chemical|Pharmacologic Substance,Chemicals & Drugs,1
+VAC,C1116171|C1519885,vaccinated,pubmed,Finding,Disorders,1
+VCA,C0005847|C0205199|C1547335|C1558950|C1801960,vascular composite allotransplantation,pubmed,"Body Part, Organ, or Organ Component|Finding|Idea or Concept|Qualitative Concept",Anatomy|Concepts & Ideas|Disorders,1
+PINS,C0032863|C0085862|C1290940|C1299583|C3854080|C3889666,power independent of the number of slices|power independent of number of slices,pubmed,Finding|Human-caused Phenomenon or Process|Idea or Concept|Quantitative Concept,Concepts & Ideas|Disorders|Phenomena,1
+FPS,C0332183|C0449774,frequent patterns,pubmed,Spatial Concept|Temporal Concept,Concepts & Ideas,1
+PAD,C0012683|C1879547,photo activated disinfection,pubmed,Activity|Therapeutic or Preventive Procedure,Activities & Behaviors|Procedures,1
+LW,C0456603|C1547037,lengthwidth ratio|lumenwall ratio|liquidtowood ratio,pubmed,Intellectual Product|Quantitative Concept,Concepts & Ideas,1
+NG,C0017562|C0205307|C0231683|C0439166|C2347086|C4553972,normal gingiva|normal gingivae,pubmed,Finding|Intellectual Product|Qualitative Concept|Quantitative Concept|Tissue,Anatomy|Concepts & Ideas|Disorders,1
+LIM,C0023008,limburgish language,umls,Language,Concepts & Ideas,1
+RLV,C1532427,rhizobium leguminosarum bv viciae|rhizobium leguminosarum biovar viciae|rhizobium leguminosarum bv viciae 3841,pubmed,Bacterium,Living Beings,1
+MC,C0678420,myers cocktail,pubmed,Food,Objects,1
+TN,C0027368|C0336809,trained nandrolone,pubmed,Hormone|Manufactured Object|Organic Chemical|Pharmacologic Substance,Chemicals & Drugs|Objects,1
+ETA,C0085732|C0332289|C0750572,estimated transmitting abilities,pubmed,Functional Concept|Organism Attribute|Quantitative Concept,Concepts & Ideas|Physiology,1
+GSF,C0016658|C0018270|C0037303|C0220844|C1621966|C2911660|C2951888|C3668932,growing skull fractures,pubmed,"Body Part, Organ, or Organ Component|Injury or Poisoning|Mammal|Organ or Tissue Function|Organism Function|Phenomenon or Process|Physiologic Function",Anatomy|Disorders|Living Beings|Phenomena|Physiology,1
+TP,C0032098|C0242772|C0885519|C1140676,tomato plants,pubmed,Food|Pharmacologic Substance|Plant,Chemicals & Drugs|Living Beings|Objects,1
+CBS,C0376691|C1709697|C2728259|C3484370,cognitivebehavioral selfhelp program,pubmed,Conceptual Entity|Functional Concept|Intellectual Product|Organic Chemical|Pharmacologic Substance,Chemicals & Drugs|Concepts & Ideas,1
+DCO,C0205108|C3163986|C4522154,distal chevron osteotomy,pubmed,Clinical Attribute|Spatial Concept|Therapeutic or Preventive Procedure,Concepts & Ideas|Physiology|Procedures,1
+FST,C0017270,frequencies among populations,pubmed,Quantitative Concept,Concepts & Ideas,1
+EDT,C0577538,electrodynamic tether,wikipedia,Functional Concept,Concepts & Ideas,1
+SR,C0038317|C0237834|C1514892|C4281815,steroid resistance,pubmed,Functional Concept|Mental Process|Organic Chemical|Pharmacologic Substance|Physiologic Function,Chemicals & Drugs|Concepts & Ideas|Physiology,1
+KB,C0582519,kilobases|kilobase,"wikipedia,pubmed",Quantitative Concept,Concepts & Ideas,1
+RMS,C0205120|C0743559|C1552595,rootmean square errors,pubmed,Intellectual Product|Qualitative Concept|Spatial Concept,Concepts & Ideas,1
+MCC,C0008018|C0179874|C0935616|C1257867,microfluidic chemotaxis chamber,pubmed,"Body Part, Organ, or Organ Component|Cell Function|Manufactured Object|Occupation or Discipline",Anatomy|Objects|Occupations|Physiology,1
+RAPE,C0330502,brassica napus,umls,Plant,Living Beings,1
+MIM,C0205430|C0242538|C0728826|C1708511|C3160715|C3161035|C3274659|C3714583|C3853906,mixed inheritance model,pubmed,Conceptual Entity|Finding|Functional Concept|Genetic Function|Intellectual Product|Quantitative Concept,Concepts & Ideas|Disorders|Physiology,1
+DTR,C0035124|C0684253,doortoangiographic reperfusion,pubmed,Biologic Function|Therapeutic or Preventive Procedure,Phenomena|Procedures,1
+MA,C0026597|C0085089|C0699801,motion artifacts,pubmed,Human-caused Phenomenon or Process|Manufactured Object|Natural Phenomenon or Process,Objects|Phenomena,1
+LA,C0010092|C0205177|C0439167|C0441655|C1561536|C3668946|C4049938|C4049939,luteal activity,pubmed,"Activity|Body Part, Organ, or Organ Component|Finding|Idea or Concept|Intellectual Product|Laboratory Procedure|Qualitative Concept|Quantitative Concept",Activities & Behaviors|Anatomy|Concepts & Ideas|Disorders|Procedures,1
+ORE,C0946715,origanum vulgare,pubmed,Plant,Living Beings,1
+RANGE,C0271561|C0549183|C0876920|C2347635|C2348144|C2939193,radiationinduced ghd the median,pubmed,Disease or Syndrome|Quantitative Concept|Spatial Concept,Concepts & Ideas|Disorders,1
+ICS,C0001613|C0007776|C0022655|C0456904|C1292856|C1948023,intraoperative cortical stimulation,pubmed,"Body Part, Organ, or Organ Component|Natural Phenomenon or Process|Temporal Concept|Therapeutic or Preventive Procedure",Anatomy|Concepts & Ideas|Phenomena|Procedures,1
+ACR,C0456603|C1547037,albuminuriatocreatinine ratio,pubmed,Intellectual Product|Quantitative Concept,Concepts & Ideas,1
+SB,C1013835|C1215783|C3254859,sea buckthorn,pubmed,Organic Chemical|Pharmacologic Substance|Plant,Chemicals & Drugs|Living Beings,1
+RICS,C0023602|C1522406,renomedullary interstitial cells,pubmed,Cell,Anatomy,1
+BPN,C0205384|C0237753|C0449788|C1253959|C1881507|C2700383|C2826234,branch pod number,pubmed,Chemical Viewed Structurally|Intellectual Product|Plant|Quantitative Concept|Spatial Concept,Chemicals & Drugs|Concepts & Ideas|Living Beings,1
+IGA,C3273407,cd79a wt allele,umls,Gene or Genome,Genes & Molecular Sequences,1
+RPS,C0205225|C0205360|C0439612|C0439631|C0445237|C2347098,rotational primary stability,pubmed,Qualitative Concept|Spatial Concept|Temporal Concept|Therapeutic or Preventive Procedure,Concepts & Ideas|Procedures,1
+HE,C0062165,hederagenin,pubmed,Organic Chemical,Chemicals & Drugs,1
+SHA,C0002045|C1553907,smarthelical algorithm,pubmed,Functional Concept|Intellectual Product,Concepts & Ideas,1
+PENG,C0971025,polyelectrolyte nanogel,pubmed,Organic Chemical,Chemicals & Drugs,1
+VF,C0042789,visual function|vision function,pubmed,Organism Function,Physiology,1
+ESM,C1261552|C1279919|C3814463,early steps multisite,pubmed,Conceptual Entity|Quantitative Concept|Temporal Concept,Concepts & Ideas,1
+VEN,C0078569|C1266786,venlafaxine,pubmed,Laboratory Procedure|Organic Chemical|Pharmacologic Substance,Chemicals & Drugs|Procedures,1
+MAN,C0021632|C0024763|C0175674|C0348000|C1704339|C3891067,manual instrumentation,pubmed,Functional Concept|Intellectual Product|Manufactured Object|Qualitative Concept|Quantitative Concept,Concepts & Ideas|Objects,1
+SAY,C0280109|C0453991|C0683705|C1540238|C3667898,sycamore lace bug icorythucha ciliatai,pubmed,Gene or Genome|Governmental or Regulatory Activity|Manufactured Object|Organic Chemical|Pharmacologic Substance|Therapeutic or Preventive Procedure,Activities & Behaviors|Chemicals & Drugs|Genes & Molecular Sequences|Objects|Procedures,1
+SCB,C0005554|C0681574|C0997177|C3503436,sugarcane biopolymer|sugarcane biopolymers,pubmed,"Amino Acid, Peptide, or Protein|Biologically Active Substance|Food|Organic Chemical|Pharmacologic Substance|Plant",Chemicals & Drugs|Living Beings|Objects,1
+CEP,C0033204|C0743559|C1282913|C1608199,circular error probability,pubmed,Functional Concept|Qualitative Concept|Quantitative Concept|Spatial Concept,Concepts & Ideas,1
+VPT,C0022885|C0039593|C0234621|C0392366|C0449774|C0456984|C1515976|C3831328|C4318744,visual patterns test,pubmed,Body Location or Region|Classification|Functional Concept|Intellectual Product|Laboratory Procedure|Laboratory or Test Result|Spatial Concept,Anatomy|Concepts & Ideas|Phenomena|Procedures,1
+SHML,C0019625,sinus histiocytosis with massive lymphadenopathy,pubmed,Disease or Syndrome,Disorders,1
+PY,C0034243|C0072667,pyrene itself|pyrene,pubmed,Hazardous or Poisonous Substance|Organic Chemical,Chemicals & Drugs,1
+MIA,C0001128|C0202406,monoiodacetic acid|methyl2indolic acid,pubmed,Chemical|Laboratory Procedure,Chemicals & Drugs|Procedures,1
+SEM,C0019328|C0020517|C0036667|C0312418|C0427965|C0444504|C1511883|C1522640|C2346484|C2347634|C2348143|C2349185,sensitivity after hernia repair mean,pubmed,Finding|Mental Process|Pathologic Function|Phenomenon or Process|Qualitative Concept|Quantitative Concept|Therapeutic or Preventive Procedure,Concepts & Ideas|Disorders|Phenomena|Physiology|Procedures,1
+RC,C0449432|C1705248|C2347957|C3889646,reserve component,pubmed,Activity|Conceptual Entity|Manufactured Object|Temporal Concept,Activities & Behaviors|Concepts & Ideas|Objects,1
+HH,C0333275|C0857353,hemorrhagic hypotensive,pubmed,Pathologic Function|Qualitative Concept,Concepts & Ideas|Disorders,1
+NMI,C1449836,naphtyl methyl imidazoline,pubmed,Organic Chemical,Chemicals & Drugs,1
+SEPS,C0036864|C1514468|C1627358|C2349975|C2985765,sexual enhancement products,pubmed,Activity|Behavior|Entity|Intellectual Product|Therapeutic or Preventive Procedure,Activities & Behaviors|Concepts & Ideas|Objects|Procedures,1
+IIA,C0076918|C1333716|C1333717,in concert with tfiia,pubmed,"Amino Acid, Peptide, or Protein|Biologically Active Substance|Gene or Genome",Chemicals & Drugs|Genes & Molecular Sequences,1
+MRT,C0870887|C0871261|C1704632|C1706817|C2911692|C3540678,metronome response task,pubmed,Finding|Intellectual Product|Manufactured Object|Mental Process|Occupational Activity|Organism Attribute,Activities & Behaviors|Concepts & Ideas|Disorders|Objects|Physiology,1
+PH,C0071246|C1418644,pleckstrin homologylike,pubmed,"Amino Acid, Peptide, or Protein|Biologically Active Substance|Gene or Genome",Chemicals & Drugs|Genes & Molecular Sequences,1
+VRS,C0183309,virtualreality simulator,pubmed,Medical Device,Devices,1
+DC,C0001041|C0682685|C3899378,diffusion coefficient of acetylcholine in the synaptic cleft,pubmed,Biologically Active Substance|Cell Component|Conceptual Entity|Organic Chemical|Pharmacologic Substance,Anatomy|Chemicals & Drugs|Concepts & Ideas,1
+MSU,C0557854|C1306898|C1881845|C2825316|C3245478,million service units,wikipedia,Idea or Concept|Manufactured Object|Occupational Activity|Quantitative Concept,Activities & Behaviors|Concepts & Ideas|Objects,1
+PIPS,C0441470,pseudoisochromatic plates,pubmed,Medical Device,Devices,1
+AEM,C0232920,aseptic encephalitismeningitis,pubmed,Qualitative Concept,Concepts & Ideas,1
+DAS,C0011327,dental assistants,pubmed,Professional or Occupational Group,Living Beings,1
+PNP,C1418856,ppy gene,umls,Gene or Genome,Genes & Molecular Sequences,1
+MPR,C0025255|C0033308|C0034833|C0230664|C0279759|C0279766|C0596901|C1366500|C1418864|C1539372|C1706182|C2757070|C3538934|C3538935|C3889640|C4048189|C4082178|C4082184|C4085573|C4552913|C4552914,membrane progesterone p4 receptor pr,pubmed,"Amino Acid, Peptide, or Protein|Cell Component|Functional Concept|Gene or Genome|Hormone|Intellectual Product|Laboratory Procedure|Laboratory or Test Result|Manufactured Object|Organic Chemical|Pharmacologic Substance|Receptor|Tissue",Anatomy|Chemicals & Drugs|Concepts & Ideas|Genes & Molecular Sequences|Objects|Phenomena|Procedures,1
+CAI,C0007036|C2757046|C3536853|C3541961|C4521887,carbonic anhydrase inhibition,pubmed,Molecular Function|Pharmacologic Substance|Qualitative Concept,Chemicals & Drugs|Concepts & Ideas|Physiology,1
+HU,C0018903|C0018905|C0439148|C1519795|C1571707|C3853603,hemagglutination units,pubmed,Laboratory Procedure|Molecular Function|Quantitative Concept,Concepts & Ideas|Physiology|Procedures,1
+OL,C0228539|C0242724|C0262254|C0349382|C1706081,olive leaves,pubmed,"Activity|Body Part, Organ, or Organ Component|Food|Plant",Activities & Behaviors|Anatomy|Living Beings|Objects,1
+AR,C0178987|C0443286|C0458827,airway reactivity,pubmed,"Body Part, Organ, or Organ Component|Functional Concept|Medical Device",Anatomy|Concepts & Ideas|Devices,1
+SWAP,C0043047|C0597198|C0599638|C1510941|C1550678|C1882330|C4698035,shallow water array performance,pubmed,Activity|Finding|Individual Behavior|Inorganic Chemical|Pharmacologic Substance|Spatial Concept|Substance,Activities & Behaviors|Chemicals & Drugs|Concepts & Ideas|Disorders|Objects,1
+NADH,C0027303|C1710637|C3816747|C3887676,nadph km  500 microm vmax,pubmed,"Biologically Active Substance|Intellectual Product|Nucleic Acid, Nucleoside, or Nucleotide|Phenomenon or Process|Quantitative Concept",Chemicals & Drugs|Concepts & Ideas|Phenomena,1
+CST,C0030702|C0336791|C2827396,client satisfaction tool,pubmed,Manufactured Object|Qualitative Concept,Concepts & Ideas|Objects,1
+LGL,C0242724|C1025636|C1706081|C4521770,lemon grass leaves,pubmed,Activity|Food|Plant,Activities & Behaviors|Living Beings|Objects,1
+DEPTH,C0042569|C4554582,dimensional phase equilibria in the vertical,pubmed,Diagnostic Procedure|Spatial Concept,Concepts & Ideas|Procedures,1
+PAR,C0025102|C0034869|C0679830|C1261322|C1516048|C3853788,patient assessment record,pubmed,Activity|Health Care Activity|Intellectual Product|Quantitative Concept,Activities & Behaviors|Concepts & Ideas|Procedures,1
+TL,C0995917,thermococcus litoralis,pubmed,Archaeon,Living Beings,1
+FHC,C0442592|C0600220,family health clinics,pubmed,Finding|Health Care Related Organization|Manufactured Object,Disorders|Objects|Organizations,1
+VD,C0011265|C0497327,vasculartype of dementia,pubmed,Mental or Behavioral Dysfunction,Disorders,1
+STM,C0301838|C2744539|C3540468|C4552802|C4554464,soluble tm antigen,pubmed,"Amino Acid, Peptide, or Protein|Biologically Active Substance|Finding|Gene or Genome|Immunologic Factor|Intellectual Product",Chemicals & Drugs|Concepts & Ideas|Disorders|Genes & Molecular Sequences,1
+CDB,C0010200|C1321587|C1328799,coughing and deep breathing,pubmed,Finding|Sign or Symptom,Disorders,1
+TBB,C0005558|C0028778|C0220797|C0332206|C1533157|C1706084|C1829458|C2828370|C4319518,tunneling bloc biopsy,pubmed,Body Substance|Diagnostic Procedure|Finding|Functional Concept|Geographic Area|Pathologic Function|Quantitative Concept,Anatomy|Concepts & Ideas|Disorders|Geographic Areas|Procedures,1
+PTS,C0030193|C0270844,painful tonic seizure,pubmed,Disease or Syndrome|Sign or Symptom,Disorders,1
+ECS,C1172779,endocannabinoids,pubmed,Biologically Active Substance|Organic Chemical,Chemicals & Drugs,1
+CAP,C0439825|C0522223,compound auditory nerve action potential|compound action potentials of auditory nerve,pubmed,Functional Concept|Organ or Tissue Function,Concepts & Ideas|Physiology,1
+GPA,C0002778|C0205246|C0936012|C1014634|C1524024,generalized procrustes analysis|generalised procrustes analysis,"wikipedia,pubmed",Eukaryote|Functional Concept|Laboratory Procedure|Research Activity|Spatial Concept,Concepts & Ideas|Living Beings|Procedures,1
+COLON,C0030551|C0337465|C1514468|C1566558|C1704444|C1707455|C2699423|C3898998,comparable to that of the parent natural product against hct116,pubmed,Activity|Biologically Active Substance|Conceptual Entity|Entity|Experimental Model of Disease|Family Group|Quantitative Concept,Activities & Behaviors|Chemicals & Drugs|Concepts & Ideas|Disorders|Living Beings|Objects,1
+PFT,C0040130,thyroid function tests,umls,Laboratory Procedure,Procedures,1
+SVR,C0230003|C0439834|C0871261|C1704632|C1706817|C2697524|C2911692,slow vertex response,pubmed,Body Location or Region|Conceptual Entity|Finding|Intellectual Product|Mental Process|Organism Attribute|Qualitative Concept,Anatomy|Concepts & Ideas|Disorders|Physiology,1
+THF,C0016832|C0521033|C1521840|C2939457,targeted hostassociated fungi,pubmed,Functional Concept|Fungus|Laboratory or Test Result,Concepts & Ideas|Living Beings|Phenomena,1
+ESM,C0013935|C0013936|C0577559|C0577573|C0868971|C1306372|C3152252|C4283905,embryogenic suspensor masses,pubmed,Embryonic Structure|Finding|Intellectual Product|Organ or Tissue Function|Quantitative Concept|Sign or Symptom,Anatomy|Concepts & Ideas|Disorders|Physiology,1
+CFT,C0009240|C0022885|C0039593|C0392335|C0392366|C0456984|C1515976|C3831328|C4050130|C4318744,cognitive function tests|cognitive function test,pubmed,Body Location or Region|Classification|Functional Concept|Intellectual Product|Laboratory Procedure|Laboratory or Test Result|Mental Process,Anatomy|Concepts & Ideas|Phenomena|Physiology|Procedures,1
+ELLA,C0005507|C0023206|C0243073|C1145667|C1167622|C1510438,enzymelinked lectin binding assay,pubmed,"Activity|Amino Acid, Peptide, or Protein|Biologically Active Substance|Laboratory Procedure|Molecular Function|Qualitative Concept",Activities & Behaviors|Chemicals & Drugs|Concepts & Ideas|Physiology|Procedures,1
+PRM,C0728938|C1550516|C1882115|C4331442,partial response with normalization of tumor markers,pubmed,Finding|Idea or Concept|Quantitative Concept|Research Activity,Concepts & Ideas|Disorders|Procedures,1
+MEN,C0030705|C0205452|C4047366,membranes six hemodialysis patients,pubmed,Medical Device|Patient or Disabled Group|Quantitative Concept,Concepts & Ideas|Devices|Living Beings,1
+DRT,C0004379|C0034746|C2137270|C4050139,driving reaction time,pubmed,Daily or Recreational Activity|Finding|Intellectual Product|Temporal Concept,Activities & Behaviors|Concepts & Ideas|Disorders,1
+MW,C0025595|C0439230,meteorological weeks,pubmed,Occupation or Discipline|Temporal Concept,Concepts & Ideas|Occupations,1
+ALPS,C0442950|C0442953,anterolateral thoracotomy with partial sternotomy,pubmed,Therapeutic or Preventive Procedure,Procedures,1
+USG,C0018104|C0041703|C3854060,united states government,pubmed,Geographic Area|Occupational Activity|Organization,Activities & Behaviors|Geographic Areas|Organizations,1
+TSS,C0449820|C0597547|C4050231,targetlesion syntax score,pubmed,Clinical Attribute|Idea or Concept|Quantitative Concept,Concepts & Ideas|Physiology,1
+SP,C0072595,sperminated pullulans,pubmed,Organic Chemical,Chemicals & Drugs,1
+PA,C0004482|C0032950,prednisolone and azathioprine,pubmed,Hazardous or Poisonous Substance|Organic Chemical|Pharmacologic Substance,Chemicals & Drugs,1
+LVQ,C1517945,loss variancequalitative,pubmed,Quantitative Concept,Concepts & Ideas,1
+HX,C0262926|C0560617|C1522225|C3814444,hx knockout,pubmed,Experimental Model of Disease|Finding|Gene or Genome|Injury or Poisoning,Disorders|Genes & Molecular Sequences,1
+POS,C0752063,peroxisomes,pubmed,Cell Component,Anatomy,1
+BORN,C0035168|C0150775|C0242481|C1513822|C1515417|C1705739|C1882071,breast oncology research network,pubmed,Biomedical Occupation or Discipline|Functional Concept|Manufactured Object|Population Group|Professional or Occupational Group|Research Activity,Concepts & Ideas|Living Beings|Objects|Occupations|Procedures,1
+AVM,C0086582|C1510992|C1706180|C1706428|C1706429|C2825518,average male,pubmed,Organism Attribute|Qualitative Concept|Quantitative Concept,Concepts & Ideas|Physiology,1
+ROS,C0489633,review of systems procedure,umls,Health Care Activity,Procedures,1
+ALUM,C0017243|C0051519|C1382104,aluminum phosphate gel,pubmed,Biomedical or Dental Material|Inorganic Chemical|Pharmacologic Substance|Substance,Chemicals & Drugs|Objects,1
+MOS,C0596917,metal oxides,pubmed,Inorganic Chemical,Chemicals & Drugs,1
+CDP,C0012632|C0032863|C1511559|C2987623|C3854080,cumulated discrimination power|cumulative discrimination power,pubmed,Human-caused Phenomenon or Process|Mental Process|Qualitative Concept|Quantitative Concept|Social Behavior,Activities & Behaviors|Concepts & Ideas|Phenomena|Physiology,1
+RADS,C0205436|C0457385|C0565930|C1551047|C1561503|C1705190,radians per second,pubmed,Idea or Concept|Qualitative Concept|Quantitative Concept|Temporal Concept,Concepts & Ideas,1
+PCL,C0447922|C1184147,palmar carpal ligament,pubmed,"Body Part, Organ, or Organ Component|Spatial Concept",Anatomy|Concepts & Ideas,1
+PO,C0021492|C0022326|C0026934|C0032241|C0231290|C0332282|C0348016|C0442027|C0442117|C4265176|C4521986,pleuropneumoniae following intravenous iv intramuscular im or oral,pubmed,Bacterium|Clinical Attribute|Disease or Syndrome|Finding|Functional Concept|Geographic Area|Spatial Concept|Temporal Concept,Concepts & Ideas|Disorders|Geographic Areas|Living Beings|Physiology,1
+THS,C0039082|C0439816|C0453911|C0584895,tight hamstrings syndrome,pubmed,"Body Part, Organ, or Organ Component|Disease or Syndrome|Manufactured Object|Qualitative Concept",Anatomy|Concepts & Ideas|Disorders|Objects,1
+ASS,C0596084|C0920880,amphiphilic stabilizers,pubmed,Organ or Tissue Function|Qualitative Concept,Concepts & Ideas|Physiology,1
+SLIT,C3658366,sublingual immunotherapy,pubmed,Therapeutic or Preventive Procedure,Procedures,1
+IPS,C0033927|C0871786,internalizing psychopathologies,pubmed,Biomedical Occupation or Discipline|Mental Process,Occupations|Physiology,1
+GI,C0012240|C0017189|C1333803,gastrointestinal system,pubmed,Body System|Finding,Anatomy|Disorders,1
+CID,C0022023|C0086168|C0337196|C1700702,collisional ion dissociation,pubmed,"Element, Ion, or Isotope|Functional Concept|Injury or Poisoning|Mental or Behavioral Dysfunction",Chemicals & Drugs|Concepts & Ideas|Disorders,1
+OH,C0063146|C0700307,or hydroxyl|on hydroxyl|on methyl ch3 hydroxyl|or equatorial hydroxyl,pubmed,Inorganic Chemical,Chemicals & Drugs,1
+HIT,C0019602|C0076994|C0523697|C1179122,histidine triad,pubmed,"Amino Acid, Peptide, or Protein|Biologically Active Substance|Biomedical or Dental Material|Cell Component|Laboratory Procedure|Organic Chemical|Pharmacologic Substance",Anatomy|Chemicals & Drugs|Procedures,1
+SII,C0037435|C1272753,social insurance institutions,pubmed,Governmental or Regulatory Activity|Idea or Concept,Activities & Behaviors|Concepts & Ideas,1
+FMA,C0016519|C0017446|C0205146,foramen magnum area,pubmed,Body Space or Junction|Geographic Area|Spatial Concept,Anatomy|Concepts & Ideas|Geographic Areas,1
+DTE,C0006104|C0013682|C0085104,drug targeting efficiency in the brain,pubmed,"Body Part, Organ, or Organ Component|Medical Device|Quantitative Concept",Anatomy|Concepts & Ideas|Devices,1
+PIA,C0001771|C0033808|C0204727|C0205409|C0220862,pseudomonas isolation agar,pubmed,"Bacterium|Functional Concept|Indicator, Reagent, or Diagnostic Aid|Laboratory Procedure|Organic Chemical|Pharmacologic Substance|Therapeutic or Preventive Procedure",Chemicals & Drugs|Concepts & Ideas|Living Beings|Procedures,1
+RR,C0026565|C0026566|C0035647|C4552904,risk of allcause mortality|risk of mortality,pubmed,Conceptual Entity|Idea or Concept|Quantitative Concept,Concepts & Ideas,1
+IOC,C0030049|C0205198|C0348078|C0376315|C1272883|C1522492|C1706082|C4255237,injectable form of compound oxycodone,pubmed,Biomedical or Dental Material|Chemical|Clinical Attribute|Functional Concept|Manufactured Object|Organic Chemical|Pharmacologic Substance|Qualitative Concept,Chemicals & Drugs|Concepts & Ideas|Objects|Physiology,1
+HDT,C0039871|C0444956,highdose thiotepa,pubmed,Hazardous or Poisonous Substance|Organic Chemical|Pharmacologic Substance|Quantitative Concept,Chemicals & Drugs|Concepts & Ideas,1
+IFD,C0334044|C3640032,indefinite for dysplasia,pubmed,Pathologic Function|Qualitative Concept,Concepts & Ideas|Disorders,1
+DTE,C0439962,dmsotw80etoh mixture,pubmed,Substance,Objects,1
+SEC,C0700086,sodium diethyldithiocarbamate,pubmed,Organic Chemical|Pharmacologic Substance,Chemicals & Drugs,1
+BOP,C0005082,benzoapyrene on ta98 or with nnirosobis2oxopropylamine,pubmed,Hazardous or Poisonous Substance|Organic Chemical,Chemicals & Drugs,1
+GDS,C0011847|C0011849|C0557651|C1556085|C2603343,german diabetes study,pubmed,Disease or Syndrome|Manufactured Object|Population Group|Research Activity,Disorders|Living Beings|Objects|Procedures,1
+CAB,C0008260|C0033684|C0242210|C1148597,chlorophyll ab binding protein,pubmed,"Amino Acid, Peptide, or Protein|Biologically Active Substance|Molecular Function|Organic Chemical",Chemicals & Drugs|Physiology,1
+BPD,C0185033|C0439843|C3840275,bilopancreatic diversion,pubmed,Finding|Functional Concept|Therapeutic or Preventive Procedure,Concepts & Ideas|Disorders|Procedures,1
+DRS,C0012222|C0558058|C1696141|C1883073|C2827424|C3899378,diffusive reflectance spectra,pubmed,Conceptual Entity|Functional Concept|Mental Process|Natural Phenomenon or Process|Quantitative Concept,Concepts & Ideas|Phenomena|Physiology,1
+CD,C0055295,cdcs with,pubmed,Organic Chemical,Chemicals & Drugs,1
+DMSA,C0034606|C1875873,dimercaptosuccinic acid scintigraphy,pubmed,Biologically Active Substance|Diagnostic Procedure|Organic Chemical,Chemicals & Drugs|Procedures,1
+LIB,C0005680|C0027567|C0085756|C0439541,lowincome black,pubmed,Population Group|Qualitative Concept,Concepts & Ideas|Living Beings,1
+BAA,C0630779,bulleyaconitine a,pubmed,Organic Chemical|Pharmacologic Substance,Chemicals & Drugs,1
+CEP,C0032987|C0205191,chronic ectopic pregnancy,pubmed,Pathologic Function|Temporal Concept,Concepts & Ideas|Disorders,1
+MADGE,C0443198|C0596607|C1510941,microtitre array diagonal gel electrophoresis|microtiter array diagonal gel electrophoresis,pubmed,Laboratory Procedure|Spatial Concept,Concepts & Ideas|Procedures,1
+BITES,C0039194|C0425152|C0567416,bispecific tcell engager molecules,pubmed,Cell|Finding|Substance,Anatomy|Disorders|Objects,1
+MMD,C0025196|C0065902|C0178602|C0547040|C0869039|C1114758|C1513094|C1524031|C2945599|C2984280,minimal melanogenic dose,pubmed,"Amino Acid, Peptide, or Protein|Biologically Active Substance|Clinical Attribute|Molecular Function|Organic Chemical|Qualitative Concept|Quantitative Concept",Chemicals & Drugs|Concepts & Ideas|Physiology,1
+CRO,C0205435|C1279901|C1880177|C1883037,contribution from the first nearest neighboring,pubmed,Activity|Qualitative Concept|Quantitative Concept|Research Activity,Activities & Behaviors|Concepts & Ideas|Procedures,1
+MCAT,C0597763,malonylcoenzyme aacp transacylase|malonylcoa acp transacylase|malonylcoaacp transacylase,pubmed,"Amino Acid, Peptide, or Protein|Enzyme",Chemicals & Drugs,1
+DH,C0013227|C0019843|C1254351,drug holiday,pubmed,Activity|Pharmacologic Substance,Activities & Behaviors|Chemicals & Drugs,1
+PSIF,C0237881|C0743997|C0750502|C1546944|C3245505,potentially significant extrapulmonary incidental finding,pubmed,Finding|Idea or Concept|Qualitative Concept|Quantitative Concept,Concepts & Ideas|Disorders,1
+CAM,C0000768|C0001430|C1705254,congenital adenomatoid malformation,pubmed,Congenital Abnormality|Neoplastic Process,Disorders,1
+ICM,C0282597|C0682538,intact cell maldi,pubmed,Cell|Laboratory Procedure,Anatomy|Procedures,1
+LCS,C1548795|C1634625|C1999114|C2982691,live communications server 2003|live communications server|live communications server 2005,wikipedia,Activity|Occupational Activity|Qualitative Concept,Activities & Behaviors|Concepts & Ideas,1
+VAR,C1451660,variolink ii,pubmed,Biomedical or Dental Material,Chemicals & Drugs,1
+PERL,C0022646|C0221198|C1546698|C2347662,preexisting renal lesion,pubmed,"Body Part, Organ, or Organ Component|Finding|Intellectual Product|Qualitative Concept",Anatomy|Concepts & Ideas|Disorders,1
+MSM,C0628808,metsulfuron methyl,pubmed,Hazardous or Poisonous Substance|Organic Chemical,Chemicals & Drugs,1
+LL,C0020649|C0034693|C0034721,low blood pressure rats,pubmed,Finding|Mammal,Disorders|Living Beings,1
+BIO,C0053622,biochanin a,pubmed,Organic Chemical|Pharmacologic Substance,Chemicals & Drugs,1
+SAS,C0018923|C0027627|C0175668|C0205436,secondary angiosarcomas,pubmed,Neoplastic Process|Qualitative Concept|Quantitative Concept,Concepts & Ideas|Disorders,1
+NIC,C0010439|C0028040,nicotine accompanied by lighttone cues,pubmed,Hazardous or Poisonous Substance|Idea or Concept|Organic Chemical,Chemicals & Drugs|Concepts & Ideas,1
+WARD,C0012634|C0348080|C0439148|C0439453|C1509845|C1519795|C1704753|C1705253|C1880519|C3853603|C3864998|C3875154,was related to conditions in the particular unit,pubmed,Clinical Attribute|Conceptual Entity|Disease or Syndrome|Idea or Concept|Manufactured Object|Medical Device|Qualitative Concept|Quantitative Concept,Concepts & Ideas|Devices|Disorders|Objects|Physiology,1
+DNC,C0013331|C0331873|C1513822|C1880171,dutch nordic consortium,pubmed,Health Care Related Organization|Population Group|Professional or Occupational Group,Living Beings|Organizations,1
+AKA,C1199284,broussonetia papyrifera,umls,Plant,Living Beings,1
+MCCU,C0010066|C0231435|C4049704,mobile coronary care unit,pubmed,Diagnostic Procedure|Functional Concept|Health Care Related Organization|Manufactured Object,Concepts & Ideas|Objects|Organizations|Procedures,1
+SAC,C1335177,serous adenocarcinoma of the ovary,pubmed,Neoplastic Process,Disorders,1
+SWD,C0033684|C0037179|C0087136|C0205171|C0332256|C1520108|C2700400,single wap domain containing protein,pubmed,"Activity|Amino Acid Sequence|Amino Acid, Peptide, or Protein|Biologically Active Substance|Finding|Functional Concept|Population Group|Quantitative Concept",Activities & Behaviors|Chemicals & Drugs|Concepts & Ideas|Disorders|Genes & Molecular Sequences|Living Beings,1
+ESC,C2349975|C2936643,enhanced standard of care,pubmed,Activity|Health Care Activity,Activities & Behaviors|Procedures,1
+IS,C0004793|C0162326|C0162327|C1519249|C3463820|C3853789,inhibitory sequence,pubmed,Activity|Functional Concept|Intellectual Product|Nucleotide Sequence,Activities & Behaviors|Concepts & Ideas|Genes & Molecular Sequences,1
+CHI,C0008141|C0030015|C1704640|C1706515|C2936695|C2986642|C4050026|C4319583|C4553629,chitin matrix with graphene oxide nanosheets,pubmed,"Biologically Active Substance|Body Substance|Chemical Viewed Functionally|Element, Ion, or Isotope|Inorganic Chemical|Organic Chemical|Pharmacologic Substance|Quantitative Concept|Spatial Concept|Therapeutic or Preventive Procedure",Anatomy|Chemicals & Drugs|Concepts & Ideas|Procedures,1
+ECC,C0007600|C0014859|C0152018|C0546837,esophageal cancer cell lines,pubmed,Cell|Neoplastic Process,Anatomy|Disorders,1
+NERD,C0012854|C1655047|C4521340,negative regulatory dna,pubmed,"Biologically Active Substance|Laboratory Procedure|Nucleic Acid, Nucleoside, or Nucleotide|Physiologic Function",Chemicals & Drugs|Physiology|Procedures,1
+CSI,C0011334|C0333519|C0439793|C0522510|C0600653|C0918012|C1552854|C1637833|C2986546,caries severity index,pubmed,Diagnostic Procedure|Disease or Syndrome|Idea or Concept|Intellectual Product|Qualitative Concept|Quantitative Concept,Concepts & Ideas|Disorders|Procedures,1
+HAPPY,C0008100|C0205177|C0205225|C0424930|C0439234|C0439612|C0439631|C0681405|C3853793|C3888249|C3898900|C4552917,healthy active preschool and primary years,pubmed,Age Group|Finding|Idea or Concept|Manufactured Object|Organization|Qualitative Concept|Temporal Concept|Therapeutic or Preventive Procedure,Concepts & Ideas|Disorders|Living Beings|Objects|Organizations|Procedures,1
+NOK,C0022567|C0205307|C0231683|C0439166|C2347086|C4553972,normal keratinocytes,pubmed,Cell|Finding|Intellectual Product|Qualitative Concept|Quantitative Concept,Anatomy|Concepts & Ideas|Disorders,1
+KW,C0086510,kirschner wires|kirschner wire,pubmed,Medical Device,Devices,1
+LV,C0225897,left ventricle|left ventricular|left ventricles|left ventricle of the heart|left ventricular dyssynchrony,"wikipedia,pubmed","Body Part, Organ, or Organ Component",Anatomy,1
+CII,C0031603|C0031701|C0205198|C1601799|C1706082|C1710602|C4082587,compound ii diacetoxymethyl 2346tetraoethyloxycarbonylalphadmannopyranosyl phosphate,pubmed,"Amino Acid, Peptide, or Protein|Chemical|Element, Ion, or Isotope|Gene or Genome|Immunologic Factor|Inorganic Chemical|Organic Chemical|Pharmacologic Substance|Qualitative Concept",Chemicals & Drugs|Concepts & Ideas|Genes & Molecular Sequences,1
+FST,C0118175,fostriecin,"pubmed,umls",Organic Chemical|Pharmacologic Substance,Chemicals & Drugs,1
+TIC,C0085590|C0175730|C0456642|C1547937|C1561954|C1704474|C1704730|C4318415,tube introducer catheter,pubmed,Intellectual Product|Manufactured Object|Medical Device|Quantitative Concept,Concepts & Ideas|Devices|Objects,1
+HMS,C0024530|C0038002|C0039082|C2984572|C3541306|C4693174,hyperreactive malarial splenomegaly syndrome,pubmed,Disease or Syndrome|Finding|Functional Concept|Laboratory Procedure,Concepts & Ideas|Disorders|Procedures,1
+PFM,C0475209|C0857465,peak flow metres,pubmed,Finding|Quantitative Concept,Concepts & Ideas|Disorders,1
+MMMM,C0205448|C0449913|C1521991|C1553451|C1704788|C1705242|C3245505|C3539106|C3888058|C4318427|C4330985|C4554674,molecular system defined by two different mm potentials,pubmed,Finding|Functional Concept|Intellectual Product|Manufactured Object|Qualitative Concept|Quantitative Concept,Concepts & Ideas|Disorders|Objects,1
+MOH,C0549383|C2945599,mild ovarian hyperstimulation,pubmed,Pathologic Function|Qualitative Concept,Concepts & Ideas|Disorders,1
+INV,C0002085|C0300483|C0524669|C1420322|C1568630|C2349984|C4522321,inverted coin allele of sox2 sox2,pubmed,"Amino Acid, Peptide, or Protein|Biologically Active Substance|Functional Concept|Gene or Genome|Manufactured Object|Spatial Concept",Chemicals & Drugs|Concepts & Ideas|Genes & Molecular Sequences|Objects,1
+TPT,C0439175|C0439810|C1301880|C2736115|C2736116,total propagation time,pubmed,Clinical Attribute|Qualitative Concept|Quantitative Concept|Temporal Concept,Concepts & Ideas|Physiology,1
+NG,C0205170|C1518422,not good,pubmed,Functional Concept|Qualitative Concept,Concepts & Ideas,1
+HMO,C0574393,hiri motu language,umls,Language,Concepts & Ideas,1
+ESS,C0039082|C0444099|C0549255|C1123023|C3833702|C4520765,excited skin syndrome,pubmed,Activity|Body Substance|Body System|Disease or Syndrome|Finding,Activities & Behaviors|Anatomy|Disorders,1
+MA,C0001771|C0444706|C3541902,measured in the agar,pubmed,"Diagnostic Procedure|Indicator, Reagent, or Diagnostic Aid|Organic Chemical|Pharmacologic Substance|Qualitative Concept",Chemicals & Drugs|Concepts & Ideas|Procedures,1
+DNC,C0086120,dentate nuclei,pubmed,"Body Part, Organ, or Organ Component",Anatomy,1
+GF,C0180860|C0442598|C0581406|C1522664|C1704449|C1875155|C3847505,gabor filter bank,pubmed,Conceptual Entity|Intellectual Product|Manufactured Object|Medical Device,Concepts & Ideas|Devices|Objects,1
+NI,C0012634|C0442743,noninflammatory disease,pubmed,Disease or Syndrome|Finding,Disorders,1
