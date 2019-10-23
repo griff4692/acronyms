@@ -2,3 +2,4 @@ expansion_etl/data/derived/
 .idea/
 __pycache__/
 expansion_etl/__pycache__/
+expansion_etl/expansion_ml/prototyping/.ipynb_checkpoints/

@@ -26,7 +26,7 @@ def merge_sources(source_fns, acronym_list, use_cached=True):
             if sf in acronym_list:
                 lfs = list(set(list(map(standardize_lower, lfs))))
                 for lf in lfs:
-                    if lf not in STOPWORDS:
+                    if lf not in STOPWORDS and not lf.lower() == sf.lower():
                         df_arr.append([
                             sf,
                             lf,
