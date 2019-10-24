@@ -1,6 +1,7 @@
 from collections import defaultdict
 import json
 import os
+import re
 import traceback
 
 import pandas as pd
@@ -12,6 +13,17 @@ SEMANTIC_GROUP_MAP = defaultdict(int)
 SEMTYPE_TO_GROUP = {}
 GROUP_TO_SEMTYPES = defaultdict(list)
 SEMSF_TO_SEMTYPE = {}
+
+
+def merge_bars(string_arr):
+    """
+    Merge data of the sort ['a|b|c', 'b|c|d'] --> 'a|b|c|d'
+    """
+    merged = set()
+    for str in string_arr:
+        for x in str.split('|'):
+            merged.add(x)
+    return '|'.join(list(merged))
 
 
 class ErrorConcept:
@@ -56,10 +68,8 @@ def patch_batch_errors(df, mm):
 
 
 def parse_concepts(concepts):
-    if len(concepts) == 0:
-        return NULL_CUI, NULL_CUI, NULL_CUI
-
-    if len(concepts) == 1 and type(concepts[0]) == ErrorConcept:
+    assert len(concepts) > 0
+    if type(concepts[0]) == ErrorConcept:
         return 'error', 'error', 'error'
 
     cuis = set()
@@ -82,9 +92,9 @@ def parse_concepts(concepts):
 
 
 def add_cui(in_fp, use_cached=False):
-    out_fp = './data/derived/merged_acronym_expansions_with_cui.csv'
-    if use_cached and os.path.exists(out_fp):
-        return out_fp
+    out_fn = './data/derived/standardized_acronym_expansions_with_cui.csv'
+    if use_cached and os.path.exists(out_fn):
+        return out_fn
 
     semtype_data = open('./data/original/umls_semantic_types.txt', 'r')
     for line in semtype_data:
@@ -99,23 +109,28 @@ def add_cui(in_fp, use_cached=False):
         SEMTYPE_TO_GROUP[semtype] = group
         GROUP_TO_SEMTYPES[group].append(semtype)
 
+    df = pd.read_csv(in_fp)
+    cuis, semtypes, semgroups = [], [], []
     mm_path = os.path.expanduser('~/Desktop/public_mm/bin/metamap18')
     mm = MetaMap.get_instance(mm_path, version='metamap18')
 
-    df = pd.read_csv(in_fp)
-    cuis, semtypes, semgroups = [], [], []
-
-    long_forms = df['lf'].tolist()
+    concept_ids = set()
     concepts = []
-
+    lfs = df['lf_base'].tolist()
     bsize = 100
-    batches = range(0, len(long_forms), bsize)
+    batches = range(0, len(lfs), bsize)
     for bidx, start_idx in enumerate(batches):
-        end_idx = min(len(long_forms), start_idx + bsize)
-        lf_chunk = long_forms[start_idx:end_idx]
+        end_idx = min(len(lfs), start_idx + bsize)
+        lf_chunk = lfs[start_idx:end_idx]
         try:
             c = mm.extract_concepts(lf_chunk, ids=list(range(start_idx, end_idx)), derivational_variants=True,
                                     ignore_word_order=True, ignore_stop_phrases=True)[0]
+            real_end_idx = int(c[-1].index)
+            # Sometimes PyMetamap randomly doesn't return all the results
+            for i in range(real_end_idx + 1, end_idx):
+                c_individual = mm.extract_concepts([lf_chunk[i]], ids=i, derivational_variants=True,
+                                                   ignore_word_order=True, ignore_stop_phrases=True)[0]
+                c += c_individual
         except Exception as e:
             print("Type error = {}".format(str(e)))
             print(traceback.format_exc())
@@ -127,6 +142,7 @@ def add_cui(in_fp, use_cached=False):
     curr_concepts = []
     for concept in concepts:
         curr_id = int(concept.index)
+        concept_ids.add(curr_id)
         if curr_id == prev_id:
             curr_concepts.append(concept)
         else:
@@ -142,6 +158,7 @@ def add_cui(in_fp, use_cached=False):
                 semgroups.append(NULL_CUI)
             prev_id = curr_id
             curr_concepts = [concept]
+
     # Process Last batch
     cui_str, type_str, group_str = parse_concepts(curr_concepts)
     cuis.append(cui_str)
@@ -154,5 +171,18 @@ def add_cui(in_fp, use_cached=False):
     patch_batch_errors(df, mm)
 
     json.dump(SEMANTIC_GROUP_MAP, open('./data/derived/semantic_group_counts.json', 'w'))
-    df.to_csv(out_fp, index=False)
-    return out_fp
+
+    old_N = df.shape[0]
+    dfg = df.groupby(['sf', 'cui']).agg(
+        {
+            'lf': merge_bars,
+            'lf_base': merge_bars,
+            'source': merge_bars,
+            'semtypes': lambda x: list(x)[0],
+            'semgroups': lambda x: list(x)[0],
+        }).reset_index()
+
+    N = dfg.shape[0]
+    print('{} out of {} SF-LF tuples share the same set of CUIs'.format(old_N - N, old_N))
+    dfg.to_csv(out_fn, index=False)
+    return out_fn

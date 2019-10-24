@@ -5,8 +5,6 @@
 # on the /search endpoint
 #################################################################################
 
-from __future__ import print_function
-
 from collections import defaultdict
 import glob
 import json

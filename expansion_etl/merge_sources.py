@@ -36,7 +36,8 @@ def merge_sources(source_fns, acronym_list, use_cached=True):
     df = pd.DataFrame(df_arr, columns=cols)
     df.drop_duplicates(inplace=True)
     df.sort_values(['sf', 'lf', 'source'], inplace=True)
-    dfg = df.groupby(['sf', 'lf']).agg({ 'source': lambda x: '|'.join(list(x))}).reset_index()
+    dfg = df.groupby(['sf', 'lf']).agg({'source': lambda x: '|'.join(list(x))}).reset_index()
+    dfg.dropna(inplace=True)
     dfg.to_csv(out_fn, index=False)
     print('Merged {} acronym-expansion pairs.'.format(dfg.shape[0]))
     return out_fn
