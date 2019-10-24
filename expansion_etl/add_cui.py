@@ -125,10 +125,13 @@ def add_cui(in_fp, use_cached=False):
         try:
             c = mm.extract_concepts(lf_chunk, ids=list(range(start_idx, end_idx)), derivational_variants=True,
                                     ignore_word_order=True, ignore_stop_phrases=True)[0]
-            real_end_idx = int(c[-1].index)
+            if len(c) == 0:
+                real_end_idx = start_idx - 1
+            else:
+                real_end_idx = int(c[-1].index)
             # Sometimes PyMetamap randomly doesn't return all the results
             for i in range(real_end_idx + 1, end_idx):
-                c_individual = mm.extract_concepts([lf_chunk[i]], ids=i, derivational_variants=True,
+                c_individual = mm.extract_concepts([lfs[i]], ids=[i], derivational_variants=True,
                                                    ignore_word_order=True, ignore_stop_phrases=True)[0]
                 c += c_individual
         except Exception as e:
