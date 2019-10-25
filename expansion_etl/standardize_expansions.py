@@ -20,7 +20,9 @@ def choose_longest(string_arr):
 
 
 def convert_to_base(str, nlp):
-    return ' '.join([token.lemma_ for token in nlp(str) if token.lemma_ not in STOPWORDS])
+    return ' '.join(
+        [token.lemma_ for token in nlp(str.encode('ascii', errors='ignore').decode()) if token.lemma_ not in STOPWORDS]
+    )
 
 
 def merge_bars(string_arr):

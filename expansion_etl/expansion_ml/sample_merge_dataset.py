@@ -6,7 +6,11 @@ np.random.seed(1992)
 
 
 if __name__ == '__main__':
-    df = pd.read_csv('../data/derived/merged_acronym_expansions_with_merged_cuis.csv')
+    df = pd.read_csv('../data/derived/standardized_acronym_expansions_with_cui.csv')
+
+    # Remove N/A CUIS
+    df = df[~df['cui'].isnull()]
+
     acronym_counts = df['sf'].value_counts().to_dict()
     acronym_multiexpansion = []
     for acronym, v in acronym_counts.items():

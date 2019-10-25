@@ -1,7 +1,6 @@
 from collections import defaultdict
 import json
 import os
-import re
 import traceback
 
 import pandas as pd
@@ -54,8 +53,7 @@ def patch_batch_errors(df, mm):
     lfs = error_df['lf'].tolist()
     for lf, row_idx in zip(lfs, error_row_ids):
         try:
-            concepts = mm.extract_concepts(
-                [lf], derivational_variants=True, ignore_word_order=True, ignore_stop_phrases=True)[0]
+            concepts = mm.extract_concepts([lf])[0]
             cui_str, type_str, group_str = parse_concepts(concepts)
         except Exception as e:
             print("Type error = {}".format(str(e)))
@@ -110,42 +108,37 @@ def add_cui(in_fp, use_cached=False):
         GROUP_TO_SEMTYPES[group].append(semtype)
 
     df = pd.read_csv(in_fp)
+
     cuis, semtypes, semgroups = [], [], []
     mm_path = os.path.expanduser('~/Desktop/public_mm/bin/metamap18')
     mm = MetaMap.get_instance(mm_path, version='metamap18')
 
-    concept_ids = set()
     concepts = []
     lfs = df['lf_base'].tolist()
-    bsize = 100
-    batches = range(0, len(lfs), bsize)
-    for bidx, start_idx in enumerate(batches):
-        end_idx = min(len(lfs), start_idx + bsize)
+    target_bsize = 1000
+    start_idx = 0
+    while start_idx < len(lfs):
+        end_idx = min(len(lfs), start_idx + target_bsize)
         lf_chunk = lfs[start_idx:end_idx]
         try:
-            c = mm.extract_concepts(lf_chunk, ids=list(range(start_idx, end_idx)), derivational_variants=True,
-                                    ignore_word_order=True, ignore_stop_phrases=True)[0]
+            c = mm.extract_concepts(lf_chunk, ids=list(range(start_idx, end_idx)))[0]
             if len(c) == 0:
-                real_end_idx = start_idx - 1
+                c = [ErrorConcept(i) for i in range(start_idx, end_idx)]
+                start_idx = end_idx
             else:
-                real_end_idx = int(c[-1].index)
-            # Sometimes PyMetamap randomly doesn't return all the results
-            for i in range(real_end_idx + 1, end_idx):
-                c_individual = mm.extract_concepts([lfs[i]], ids=[i], derivational_variants=True,
-                                                   ignore_word_order=True, ignore_stop_phrases=True)[0]
-                c += c_individual
+                start_idx = int(c[-1].index) + 1
         except Exception as e:
             print("Type error = {}".format(str(e)))
             print(traceback.format_exc())
             c = [ErrorConcept(i) for i in range(start_idx, end_idx)]
+            start_idx = end_idx
         concepts += c
-        print('Processed batch {} out of {}'.format(bidx + 1, len(batches)))
+        print('{} out of {} examples processed ({})'.format(start_idx, len(lfs), round(start_idx / float(len(lfs)), 4)))
 
     prev_id = -1
     curr_concepts = []
     for concept in concepts:
         curr_id = int(concept.index)
-        concept_ids.add(curr_id)
         if curr_id == prev_id:
             curr_concepts.append(concept)
         else:
@@ -168,12 +161,20 @@ def add_cui(in_fp, use_cached=False):
     semtypes.append(type_str)
     semgroups.append(group_str)
 
+    # May end in NULL CUI
+    for _ in range(df.shape[0] - len(cuis)):
+        cuis.append(NULL_CUI)
+        semtypes.append(NULL_CUI)
+        semgroups.append(NULL_CUI)
+
     df['cui'] = cuis
     df['semtypes'] = semtypes
     df['semgroups'] = semgroups
     patch_batch_errors(df, mm)
 
     json.dump(SEMANTIC_GROUP_MAP, open('./data/derived/semantic_group_counts.json', 'w'))
+
+    df.dropna(inplace=True)
 
     old_N = df.shape[0]
     dfg = df.groupby(['sf', 'cui']).agg(

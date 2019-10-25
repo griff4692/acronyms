@@ -4,7 +4,11 @@ N = 300
 
 
 if __name__ == '__main__':
-    df = pd.read_csv('../data/derived/merged_acronym_expansions_with_merged_cuis.csv')
+    df = pd.read_csv('../data/derived/standardized_acronym_expansions_with_cui.csv')
+
+    # Remove N/A CUIS
+    df = df[~df['cui'].isnull()]
+
     df = df.sample(n=N, random_state=1992).reset_index(drop=True)
 
     # 2/3s train / 1/3 test
