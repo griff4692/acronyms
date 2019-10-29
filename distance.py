@@ -60,10 +60,30 @@ def aligned_edit_distance(a, b):
 
 
 if __name__ == '__main__':
-    # a = ['the', 'physical', 'therapy']
-    # b = ['physical', 'therapy', 'location']
-    # print(aligned_edit_distance(a, b))
+    a = ['Physical', 'therapy', '(field)']
+    b = ['Physical', 'therapy']
+    print(aligned_edit_distance(a, b))
 
     a = ['cancerous']
     b = ['cancerous', 'lesion']
+    print(aligned_edit_distance(a, b))
+
+    a = ['Electrocardiogram']
+    b = ['Electrocardiography']
+    print(aligned_edit_distance(a, b))
+
+    a = ['X-Ray', 'Computed', 'Tomography']
+    b = ['Computed', 'Tomography', 'Service', '(procedure)']
+    print(aligned_edit_distance(a, b))
+
+    a = ['Chronic', 'Obstructive', 'Airway', 'Disease']
+    b = ['Chronic', 'Obstructive', 'Pulmonary', 'Disease', 'Of', 'Horses']
+    print(aligned_edit_distance(a, b))
+
+    a = ['Atrial', 'Fibrillation']
+    b = ['Atrial', 'Fibrillation', 'by', 'ECG', 'Finding']
+    print(aligned_edit_distance(a, b))
+
+    a = ['Body', 'Weight', 'Domain']
+    b = ['Body', 'Weight']
     print(aligned_edit_distance(a, b))
