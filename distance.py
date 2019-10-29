@@ -38,10 +38,10 @@ def aligned_edit_distance(a, b):
         smallest_distances = np.min(dist_copy, 1)
         smallest_idx = np.argmin(smallest_distances)
         smallest_distance = smallest_distances[smallest_idx]
-        target_idx = np.where(dist[smallest_idx] == smallest_distance)[0][0]
+        target_idx = np.where(dist_copy[smallest_idx] == smallest_distance)[0][0]
         small_tokens_aligned[target_idx] = small_tokens[smallest_idx]
-        dist_copy[:, target_idx] = 99999999.9
-        dist_copy[smallest_idx, :] = 99999999.9
+        dist_copy[:, target_idx] = float('inf')
+        dist_copy[smallest_idx, :] = float('inf')
 
         if big_tokens[target_idx] in slimmed_big:
             adjusted_target_idx = slimmed_big.index(big_tokens[target_idx])
