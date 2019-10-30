@@ -13,7 +13,7 @@ def predict_merge(df, model):
     df = df[['lf_1', 'lf_2', 'Should Merge?']]
     y_score = []
     for index, row in df.iterrows():
-        y_score.append(model.aligned_edit_distance(row['lf_1'], row['lf_2'])[0])
+        y_score.append(1 - model.aligned_edit_distance(row['lf_1'].split(), row['lf_2'].split())[0])
     y_true = df['Should Merge?'].to_numpy()
     return y_true, np.array(y_score)
 
