@@ -59,31 +59,51 @@ def aligned_edit_distance(a, b):
     return np.array(total_norm_edit_distance).mean() + word_transpose_cost, covered
 
 
+def jaccard_overlap(a, b):
+    a = set(a)
+    b = set(b)
+    return (len(a.intersection(b)) / len(a.union(b)))
+
+
 if __name__ == '__main__':
     a = ['Physical', 'therapy', '(field)']
     b = ['Physical', 'therapy']
+    print(a, b)
     print(aligned_edit_distance(a, b))
+    print(jaccard_overlap(a, b))
 
     a = ['cancerous']
     b = ['cancerous', 'lesion']
+    print(a, b)
     print(aligned_edit_distance(a, b))
+    print(jaccard_overlap(a, b))
 
     a = ['Electrocardiogram']
     b = ['Electrocardiography']
+    print(a, b)
     print(aligned_edit_distance(a, b))
+    print(jaccard_overlap(a, b))
 
     a = ['X-Ray', 'Computed', 'Tomography']
     b = ['Computed', 'Tomography', 'Service', '(procedure)']
+    print(a, b)
     print(aligned_edit_distance(a, b))
+    print(jaccard_overlap(a, b))
 
     a = ['Chronic', 'Obstructive', 'Airway', 'Disease']
     b = ['Chronic', 'Obstructive', 'Pulmonary', 'Disease', 'Of', 'Horses']
+    print(a, b)
     print(aligned_edit_distance(a, b))
+    print(jaccard_overlap(a, b))
 
     a = ['Atrial', 'Fibrillation']
     b = ['Atrial', 'Fibrillation', 'by', 'ECG', 'Finding']
+    print(a, b)
     print(aligned_edit_distance(a, b))
+    print(jaccard_overlap(a, b))
 
     a = ['Body', 'Weight', 'Domain']
     b = ['Body', 'Weight']
+    print(a, b)
     print(aligned_edit_distance(a, b))
+    print(jaccard_overlap(a, b))

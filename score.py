@@ -14,6 +14,7 @@ def predict_merge(df, model):
     y_score = []
     for index, row in df.iterrows():
         y_score.append(1 - model.aligned_edit_distance(row['lf_1'].split(), row['lf_2'].split())[0])
+        # y_score.append(model.jaccard_overlap(row['lf_1'].split(), row['lf_2'].split()))
     y_true = df['Should Merge?'].to_numpy()
     return y_true, np.array(y_score)
 
