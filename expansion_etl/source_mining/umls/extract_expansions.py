@@ -10,7 +10,7 @@ import glob
 import json
 import os
 
-from expansion_etl.source_mining.umls.Authentication import *
+from .Authentication import *
 
 
 def search(string, apikey, searchType='exact'):
