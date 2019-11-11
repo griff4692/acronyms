@@ -3,3 +3,4 @@ expansion_etl/data/derived/
 __pycache__/
 expansion_etl/__pycache__/
 expansion_etl/expansion_ml/prototyping/.ipynb_checkpoints/
+*.DS_Store
