@@ -10,6 +10,7 @@ import concurrent.futures
 
 apikey = 'b3a1775f-e041-43c8-b529-03c843ff8934'
 PATH_LF = 'data/derived/standardized_acronym_expansions_with_cui.csv'
+SAVE_PATH = './data/derived/merged_lf/'
 KEY_SF = 'sf'
 KEY_LF = 'lf_base'
 KEY_GROUP = 'semgroups'
@@ -18,34 +19,23 @@ NONCLINICAL_GROUPS = set(['Genes & Molecular Sequences'])
 OTHER_KEYS = ['cui', 'source', 'semtypes', 'semgroups']
 
 
+def merge_concurrently():
+    df = pd.read_csv(PATH_LF)
+    gk = df.groupby(KEY_SF)
+    df_w_same_sf = []
+    sfs = []
+    for name, group in gk:
+        df_w_same_sf.append(group)
+        sfs.append(name)
+    print('start')
+    with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:
+        executor.map(merge_lf, df_w_same_sf, sfs)
 
-
-def merge_lf(path = PATH_LF):
-    df = pd.read_csv(path)
-    sf = ''
+def merge_lf(df_w_same_sf, sf):
     s = set()
     pre_defined = {}
     other_informations = defaultdict(dict)
-    start = False
-
-    for idx, row in df.iterrows():
-        if row[KEY_SF] == 'CAGG':
-            start = True
-        if not start:
-            continue
-        if idx < 60048:
-            continue
-        print(idx)
-        if not sf:
-            sf = row[KEY_SF]
-        if sf != row[KEY_SF]:
-            print('=====================')
-            merge_single_sf(sf, s, pre_defined, other_informations).to_csv('data/derived/merged_lf/' + sf + '.csv', index=False)
-            sf = row[KEY_SF]
-            s = set()
-            pre_defined = {}
-            other_informations = defaultdict(dict)
-
+    for idx, row in df_w_same_sf.iterrows():
         if '|' in row[KEY_LF]:
             # create dict to store lf with same CUI
             lfs = row[KEY_LF].split('|')
@@ -58,6 +48,7 @@ def merge_lf(path = PATH_LF):
                 for key in OTHER_KEYS:
                     other_informations[lf][key] = row[key]
                 s.add(lf)
+    merge_single_sf(sf, s, pre_defined, other_informations).to_csv('data/derived/merged_lf/' + sf + '.csv', index=False)
 
 def is_clinical(semgroups):
     semgroups = semgroups.split('|')
@@ -105,6 +96,6 @@ def test_union_find():
     print(b)
 
 
+
 if __name__ == '__main__':
-    # print(search('pp', apikey))
-    merge_lf()
+    merge_concurrently()
