@@ -57,6 +57,7 @@ def merge_concurrently(read_path, selected_sf=[], save_dir=SAVE_DIR, verbose=Tru
                      [verbose for _ in range(len(sfs))])
     return save_dir
 
+
 def merge_lf(df_w_same_sf, sf, save_dir, verbose):
     """
     Input:

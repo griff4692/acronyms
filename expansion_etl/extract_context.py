@@ -1,8 +1,9 @@
 import logging
-import re
 from enum import Enum
+import re
 
 import inflect
+import numpy as np
 
 logger = logging.getLogger(__name__)
 
@@ -53,7 +54,7 @@ class ContextExtractor:
             string_list = string_list[:-1]
         return string_list
 
-    def get_context(self, document: str, match_found: re.Match, context_config: dict):
+    def get_context(self, document: str, match_found: re.match, context_config: dict):
         """
         This method gets the context around a found match in the document in accordance with the context configuration
         :param document: The document to be scanned
@@ -67,7 +68,7 @@ class ContextExtractor:
             preceding_text_words = self.trim_boundaries(re.split(r'\W+', preceding_text))
             succeeding_text_words = self.trim_boundaries(re.split(r'\W+', succeeding_text))
             return ' '.join(preceding_text_words[len(preceding_text_words) - context_config['size']:]
-                            + succeeding_text_words[:context_config['size']])
+                            + ['TARGETWORD'] + succeeding_text_words[:context_config['size']])
         if context_config['type'] == ContextType.PARAGRAPH:
             preceding_text_lines = self.trim_boundaries(re.split(self.split_lines_regex, preceding_text))
             succeeding_text_lines = self.trim_boundaries(re.split(self.split_lines_regex, succeeding_text))
@@ -82,47 +83,54 @@ class ContextExtractor:
             return ' '.join(preceding_text_lines[
                             preceding_text_empty_line_indices[
                                 len(preceding_text_empty_line_indices) - context_config['size']
-                                if context_config['size'] < len(preceding_text_empty_line_indices) else -1] + 1:] +
+                                if context_config['size'] < len(preceding_text_empty_line_indices) else -1] + 1:]
+                            + ['TARGETWORD'] +
                             succeeding_text_lines[:succeeding_text_empty_line_indices[
                                 context_config['size'] - 1
                                 if context_config['size'] < len(succeeding_text_empty_line_indices) else -1]])
 
-    def get_contexts_for_long_form(self, long_form: str, document: str, context_config: dict, allow_inflections: bool,
+    def get_contexts_for_long_form(self, long_forms: str, document: str, context_config: dict, allow_inflections: bool,
                                    ignore_case: bool):
         """
         This method gets the contexts for all occurrences of a long form
-        :param long_form: The long form for which contexts are to be returned
+        :param long_forms: | delimited list of the long form for which contexts are to be returned
         :param document: The document to be scanned
         :param context_config: The context configuration
         :param allow_inflections: Boolean flag to allow inflections on the long form
         :param ignore_case: Boolean flag to ignore the case of the long form
         :return: A string containing the context around the found match (Can parameterize later to return str or list!)
         """
-        search_regex = r'(\s|\b)'
-        words_in_long_form = long_form.split()
+        search_regexes = []
         text_to_search = document.lower() if ignore_case else document
-        for word in words_in_long_form:
-            if ignore_case:
-                base_word_form = word.lower()
-            else:
-                base_word_form = word
-            word_forms = [base_word_form]
-            if allow_inflections:
-                singular_inflection = self.inflect_engine.singular_noun(base_word_form)
-                if singular_inflection:
-                    word_forms.append(singular_inflection)
-                    word_forms.append(singular_inflection + '\'s')
-                plural_inflection = self.inflect_engine.plural_noun(base_word_form)
-                word_forms.append(plural_inflection)
-                word_forms.append(plural_inflection + '\'')
-            search_regex += r'(' + '|'.join(word_forms) + r')(\s+|\b)'
+        long_forms_arr = long_forms.split('|')
+        num_words = np.array([len(a.split()) for a in long_forms_arr])
+        lf_order = np.argsort(-num_words)
+        for long_form_idx in range(len(lf_order)):
+            long_form = long_forms_arr[lf_order[long_form_idx]]
+            search_regex = r'(\s+|\b)'
+            words_in_long_form = long_form.split()
+            for word in words_in_long_form:
+                base_word_form = word.lower() if ignore_case else word
+                word_forms = [base_word_form]
+                if allow_inflections:
+                    singular_inflection = self.inflect_engine.singular_noun(base_word_form)
+                    if singular_inflection:
+                        word_forms.append(singular_inflection)
+                        word_forms.append(singular_inflection + '\'s')
+                    plural_inflection = self.inflect_engine.plural_noun(base_word_form)
+                    word_forms.append(plural_inflection)
+                    word_forms.append(plural_inflection + '\'')
+                search_regex += r'(' + '|'.join(word_forms) + r')(\s+|\b)'
+            search_regexes.append(search_regex)
+
+        summary_search_regex = '|'.join(search_regexes)
         if context_config['type'] == ContextType.DOCUMENT:
-            if re.search(search_regex, text_to_search):
+            if re.search(summary_search_regex, text_to_search):
                 return [document]
             return []
         else:
             return [self.get_context(document, match, context_config) for match in
-                    re.finditer(search_regex, text_to_search)]
+                    re.finditer(summary_search_regex, text_to_search)]
 
     def get_contexts_for_short_form(self, short_form: str, document: str, context_config: dict, allow_inflections: bool,
                                     ignore_case: bool):
@@ -213,7 +221,7 @@ if __name__ == '__main__':
     print('[' + '\n'.join((context_extractor.get_contexts_for_long_form('Longform', sample_document,
                                                                         sample_context_config, allow_inflections=False,
                                                                         ignore_case=False))) + ']')
-    print('[' + '\n'.join((context_extractor.get_contexts_for_long_form('Longform', sample_document,
+    print('[' + '\n'.join((context_extractor.get_contexts_for_long_form('Longform|Longform oh lf', sample_document,
                                                                         sample_context_config, allow_inflections=False,
                                                                         ignore_case=True))) + ']')
     print('[' + '\n'.join((context_extractor.get_contexts_for_long_form('Longform', sample_document,
