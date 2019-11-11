@@ -1,15 +1,11 @@
-import json
-import os
-from nltk.corpus import stopwords
-from distance import aligned_edit_distance, jaccard_overlap
+from distance import jaccard_overlap
 import pandas as pd
 from collections import defaultdict
 from source_mining.umls.extract_expansions import search
-import threading
 import concurrent.futures
 
 apikey = 'b3a1775f-e041-43c8-b529-03c843ff8934'
-PATH_LF = 'data/derived/standardized_acronym_expansions_with_cui.csv'
+PATH_LF = 'data/derived/prototype_acronym_expansions_final.csv'
 SAVE_PATH = './data/derived/merged_lf/'
 KEY_SF = 'sf'
 KEY_LF = 'lf_base'
@@ -31,6 +27,7 @@ def merge_concurrently(path):
     with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:
         executor.map(merge_lf, df_w_same_sf, sfs)
 
+
 def merge_lf(df_w_same_sf, sf):
     s = set()
     pre_defined = {}
@@ -50,20 +47,24 @@ def merge_lf(df_w_same_sf, sf):
                 s.add(lf)
     merge_single_sf(sf, s, pre_defined, other_informations).to_csv('data/derived/merged_lf/' + sf + '.csv', index=False)
 
+
 def is_clinical(semgroups):
     semgroups = semgroups.split('|')
     return any(group not in NONCLINICAL_GROUPS for group in semgroups)
+
 
 def find(unions, i):
     if unions[i] != i:
         return find(unions, unions[i])
     return unions[i]
 
+
 def union(unions, i1, i2):
     i1 = find(unions, i1)
     i2 = find(unions, i2)
     if i1 != i2:
         unions[i1] = i2
+
 
 def merge_single_sf(sf, s, pre_defined, other_informations):
     lfs = [key for key in s]
@@ -82,6 +83,7 @@ def merge_single_sf(sf, s, pre_defined, other_informations):
     df = pd.DataFrame(finals, columns=['sf', 'lf', 'original_lf'] + OTHER_KEYS)
     return df
 
+
 def test_union_find():
     a = list(range(10))
     for i in range(10):
@@ -96,6 +98,5 @@ def test_union_find():
     print(b)
 
 
-
 if __name__ == '__main__':
-    merge_concurrently()
+    merge_concurrently(PATH_LF)
