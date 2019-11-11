@@ -1,5 +1,6 @@
 abbreviations==0.1.5
 en-core-sci-sm==0.2.3
+inflect==2.1.0
 nltk==3.3
 numpy==1.17.2
 pandas==0.25.1

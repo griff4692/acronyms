@@ -1,9 +1,12 @@
-from collections import deque
 import json
+import logging
 import os
 import re
+from collections import deque
 
 import wikipediaapi
+
+logger = logging.getLogger(__name__)
 
 
 def remove_parens(str):
@@ -11,7 +14,7 @@ def remove_parens(str):
     return re.sub(paren, '', str).strip()
 
 
-class AcronymExpansionScraper:
+class ExpansionExtractorWikipedia:
     """
     This class encapsulates all the functionality related to scraping expansions for medical acronyms from Wikipedia
     It makes use of the python wrapper over Wikimedia APIs - Wikipedia-API
@@ -38,7 +41,7 @@ class AcronymExpansionScraper:
         """
         for section in sections:
             print("%s: %s - %s" % ("*" * (level + 1), section.title, section.text[0:40]))
-            AcronymExpansionScraper.print_sections(section.sections, level + 1)
+            ExpansionExtractorWikipedia.print_sections(section.sections, level + 1)
 
     def load_page(self, query):
         """
@@ -100,17 +103,17 @@ def extract_expansions(acronyms, use_cached=True):
     out_fn = './data/derived/wikipedia_acronym_expansions.json'
     if use_cached and os.path.exists(out_fn):
         return out_fn
-    expansion_scraper = AcronymExpansionScraper()
+    expansion_extractor = ExpansionExtractorWikipedia()
     acronym_expansions = dict()
     for acronym in acronyms:
         try:
-            expansion_scraper.load_page(acronym)
-            medical_expansions = expansion_scraper.get_medical_expansions()
+            expansion_extractor.load_page(acronym)
+            medical_expansions = expansion_extractor.get_medical_expansions()
             if medical_expansions:
-                medical_expansions_formatted = expansion_scraper.format_wiki_output(acronym, medical_expansions)
+                medical_expansions_formatted = expansion_extractor.format_wiki_output(acronym, medical_expansions)
                 acronym_expansions[acronym] = medical_expansions_formatted
         except:
-            pass
+            logger.debug('No expansions were extracted for %s', acronym)
     with open(out_fn, 'w') as fp:
         json.dump(acronym_expansions, fp)
     return out_fn
