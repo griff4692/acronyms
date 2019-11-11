@@ -19,8 +19,8 @@ NONCLINICAL_GROUPS = set(['Genes & Molecular Sequences'])
 OTHER_KEYS = ['cui', 'source', 'semtypes', 'semgroups']
 
 
-def merge_concurrently():
-    df = pd.read_csv(PATH_LF)
+def merge_concurrently(path):
+    df = pd.read_csv(path)
     gk = df.groupby(KEY_SF)
     df_w_same_sf = []
     sfs = []
