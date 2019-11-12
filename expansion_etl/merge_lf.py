@@ -12,7 +12,7 @@ KEY_LF = 'lf_base'
 KEY_GROUP = 'semgroups'
 THRESHOLD = 0.666
 NONCLINICAL_GROUPS = set(['Genes & Molecular Sequences'])
-OTHER_KEYS = ['cui', 'source', 'semtypes', 'semgroups']
+OTHER_KEYS = ['cui', 'lf_base', 'source', 'semtypes', 'semgroups']
 
 
 def merge_concurrently(path):
