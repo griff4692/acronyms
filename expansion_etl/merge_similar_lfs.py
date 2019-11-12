@@ -1,15 +1,15 @@
-import json
-import os
-from nltk.corpus import stopwords
-from distance import aligned_edit_distance, jaccard_overlap
-import pandas as pd
 from collections import defaultdict
-from source_mining.umls.extract_expansions import search
-import threading
 import concurrent.futures
+import os
+
+import pandas as pd
+
+from distance import jaccard_overlap
+from source_mining.umls.extract_expansions import search
+
 
 apikey = 'b3a1775f-e041-43c8-b529-03c843ff8934'
-PATH_LF = 'data/derived/standardized_acronym_expansions_with_cui.csv'
+PATH_LF = 'data/derived/prototype_acronym_expansions_final.csv'
 SAVE_DIR = 'data/derived/merged_lf/'
 KEY_SF = 'sf'
 KEY_LF = 'lf'
@@ -101,6 +101,7 @@ def merge_lf(df_w_same_sf, sf, save_dir, verbose):
     print('finish finding all the long forms of', sf)
     merge_single_sf(sf, set_lfs, pre_defined, other_informations).to_csv(os.path.join(save_dir, sf + '.csv'), index=False)
 
+
 def merge_single_sf(sf, set_lfs, pre_defined, other_informations):
     """
     Input:
@@ -120,7 +121,6 @@ def merge_single_sf(sf, set_lfs, pre_defined, other_informations):
     lfs = [key for key in set_lfs]
     unions = list(range(len(lfs)))
     # apply union find to group similar lf
-    cui_dict = defaultdict(set)
     for i in range(len(lfs)-1):
         for j in range(i+1, len(lfs)):
             # union those long forms that are
@@ -149,24 +149,29 @@ def merge_single_sf(sf, set_lfs, pre_defined, other_informations):
     df = pd.DataFrame(rows, columns=FINAL_KEYS)
     return df
 
+
 def have_same_cui(lf1, lf2, other_informations):
     """check if lf1 and lf2 have the same cui"""
     return any(cui1 in other_informations[lf2][KEY_CUI].split('|') for cui1 in other_informations[lf1][KEY_CUI].split('|'))
 
+
 def is_clinical(semgroups):
     semgroups = semgroups.split('|')
     return any(group not in NONCLINICAL_GROUPS for group in semgroups)
+
 
 def find(unions, i):
     if unions[i] != i:
         return find(unions, unions[i])
     return unions[i]
 
+
 def union(unions, i1, i2):
     i1 = find(unions, i1)
     i2 = find(unions, i2)
     if i1 != i2:
         unions[i1] = i2
+
 
 if __name__ == '__main__':
     merge_concurrently(PATH_LF)
