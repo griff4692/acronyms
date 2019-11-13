@@ -8,9 +8,9 @@ def get_form_counts(df, form):
 
 
 if __name__ == '__main__':
-    base_dir = '../data/derived/'
+    base_dir = os.path.expanduser('~/acronyms/expansion_etl/data/derived/')
     df = pd.read_csv(os.path.join(base_dir, 'all_prototype_contexts.csv'))
-    acronyms = pd.read_csv(os.path.join(base_dir, '/prototype_acronym_expansions.csv'))
+    acronyms = pd.read_csv(os.path.join(base_dir, 'prototype_acronym_expansions.csv'))
 
     sf_counts = []
     lf_counts = []
@@ -25,4 +25,4 @@ if __name__ == '__main__':
         lf_counts.append(get_form_counts(df, lf))
     acronyms['sf_count'] = sf_counts
     acronyms['lf_count'] = lf_counts
-    acronyms.to_csv(os.path.join(base_dir, '/prototype_acronym_expansions_w_counts.csv'), index=False)
+    acronyms.to_csv(os.path.join(base_dir, 'prototype_acronym_expansions_w_counts.csv'), index=False)
