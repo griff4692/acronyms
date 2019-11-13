@@ -4,7 +4,7 @@ import pandas as pd
 
 
 if __name__ == '__main__':
-    base_dir = './expansion_etl/data/derived/'
+    base_dir = '../data/derived/'
     columbia_df = pd.read_csv(os.path.join(base_dir, 'columbia_prototype_contexts.csv'))
 
     mimic_dfs = []

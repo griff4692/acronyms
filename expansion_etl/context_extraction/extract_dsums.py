@@ -31,7 +31,7 @@ if __name__ == '__main__':
     years = list(range(1988, 2015))
     context_extractor = ContextExtractor()
     contexts = []
-    df = pd.read_csv('./expansion_etl/data/derived/prototype_acronym_expansions.csv')
+    df = pd.read_csv('../data/derived/prototype_acronym_expansions.csv')
 
     sfs = df['sf'].unique().tolist()
     lfs = df['lf'].unique().tolist()
@@ -41,6 +41,7 @@ if __name__ == '__main__':
         print('Processing Columbia Discharge summaries in {}'.format(year))
         doc_string = ''
         start_line_idx = 0
+        # Must be run on Columbia's DBMI rashi server
         file = open('/nlp/projects/medical_wsd/data/dsum_corpus_02/{}'.format(year), 'r')
         for line_idx, line in enumerate(file):
             if line == '\n':
