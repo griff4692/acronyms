@@ -7,7 +7,7 @@ if __name__ == '__main__':
     base_dir = '../data/derived/'
     columbia_df = pd.read_csv(os.path.join(base_dir, 'columbia_prototype_contexts.csv'))
 
-    acronyms = pd.read_csv(os.path.join(base_dir, '/prototype_acronym_expansions.csv'))
+    acronyms = pd.read_csv(os.path.join(base_dir, 'prototype_acronym_expansions.csv'))
 
     lfs = acronyms['lf'].unique().tolist()
     sfs = acronyms['sf'].unique().tolist()

@@ -1,4 +1,6 @@
 expansion_etl/data/derived/
+expansion_etl/context_extraction/data/
+context_embeddings/data/
 .idea/
 *.DS_Store
 __pycache__/
