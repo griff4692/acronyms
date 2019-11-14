@@ -6,11 +6,16 @@ import pandas as pd
 if __name__ == '__main__':
     base_dir = '../data/derived/'
     columbia_df = pd.read_csv(os.path.join(base_dir, 'columbia_prototype_contexts.csv'))
-
-    acronyms = pd.read_csv(os.path.join(base_dir, '/prototype_acronym_expansions.csv'))
+    acronyms = pd.read_csv(os.path.join(base_dir, 'prototype_acronym_expansions.csv'))
 
     lfs = acronyms['lf'].unique().tolist()
     sfs = acronyms['sf'].unique().tolist()
+
+    form_to_sf = {}
+    for lf in lfs:
+        form_to_sf[lf] = acronyms[acronyms['lf'] == lf]['sf'].tolist()[0]
+    for sf in sfs:
+        form_to_sf[sf] = sf
 
     mimic_dfs = []
     mimic_dir = os.path.join(base_dir, 'mimic')
@@ -29,9 +34,5 @@ if __name__ == '__main__':
     print('Saving a whopping {} contexts to {}'.format(full_df.shape[0], out_fn))
 
     # Append requisite short forms to the dataframe
-    context_sfs = []
-    for idx, row in full_df.iterrows():
-        form = row.to_dict()['form']
-        sf = form if form in sfs else acronyms[acronyms['lf'] == form]['sf'].tolist()[0]
-        context_sfs.append(sf)
+    full_df['sf'] = full_df['form'].apply(lambda k: form_to_sf[k])
     full_df.to_csv(out_fn, index=False)
