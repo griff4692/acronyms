@@ -191,8 +191,13 @@ if __name__ == '__main__':
                 if ct > 0:
                     new_means = (expansion_context_embed_sums[sf][expansion_idx, :] / ct)
                     expansion_context_means[sf][expansion_idx] = new_means
-            expansion_context_embed_sums[sf].fill(0)
-            expansion_assignment_counts[sf].fill(0)
         log_joint = compute_log_joint(
             sfs, data, thetas, topic_assignments, betas, expansion_assignments, expansion_context_means)
         print('Log Joint={} at Iteration {}'.format(log_joint, iter_ct))
+
+        # Reset count variables to 0
+        for sf in sfs:
+            topic_expansion_assignment_counts[sf].fill(0)
+            expansion_context_embed_sums[sf].fill(0)
+            expansion_assignment_counts[sf].fill(0)
+        doc_topic_assignment_counts = np.zeros([num_docs, num_topics])
