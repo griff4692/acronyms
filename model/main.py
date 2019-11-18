@@ -6,6 +6,37 @@ from scipy.stats import norm
 from model.vocab import Vocab
 
 
+def compute_log_joint(sfs, data, thetas, topic_assignments, betas, expansion_assignments, expansion_context_means):
+    # compute prior p(beta) for each topic
+    log_joint = 0.0
+    for sf in sfs:
+        for expansion_proportions in betas[sf]:
+            log_joint += 0.0  # compute dirichlet pdf based on expansion_proportions as sample
+
+    # compute prior p(theta) for each document
+    for n, doc in enumerate(data):
+        theta = thetas[n]
+        # TODO compute theta prior likelihood
+        for m, example in enumerate(doc):
+            sf = sfs[int(example[0])]
+            ce = example[1:]
+
+            topic_assignment = topic_assignments[n][m]
+            expansion_assignment = expansion_assignments[n][m]
+
+            # p(topic_z | theta)
+            log_joint += np.log(theta[topic_assignment])
+
+            # p(expansion_z | topic_z, betas, sf)
+            log_joint += np.log(betas[sf][topic_z][expansion_assignment])
+
+            assignment_means = expansion_context_means[sf][expansion_assignment]
+            for eidx in range(len(assignment_means)):
+                log_joint += np.log(norm(assignment_means[eidx], 1).pdf(ce[eidx]))
+
+    return log_joint
+
+
 def safe_multiply(a, b):
     return np.exp(np.log(a + 1e-5) + np.log(b + 1e-5))
 
@@ -38,7 +69,7 @@ if __name__ == '__main__':
     # Model Dimensions & Hyperparameters
     num_docs = 3
     num_acronyms = len(sfs)
-    embed_dim = 100
+    embed_dim = 15
     num_topics = semgroup_vocab.size()  # 15
 
     # Initialize latent variables
@@ -162,4 +193,6 @@ if __name__ == '__main__':
                     expansion_context_means[sf][expansion_idx] = new_means
             expansion_context_embed_sums[sf].fill(0)
             expansion_assignment_counts[sf].fill(0)
-        print('Done Iteration {}'.format(iter_ct))
+        log_joint = compute_log_joint(
+            sfs, data, thetas, topic_assignments, betas, expansion_assignments, expansion_context_means)
+        print('Log Joint={} at Iteration {}'.format(log_joint, iter_ct))
