@@ -125,7 +125,7 @@ if __name__ == '__main__':
             expansion_assignment = np.random.randint(0, sf_vocab[sf].size(), size=1)[0]
             doc_expansion_assignments[m] = expansion_assignment
             # Update topic_expansion_assignment_counts (sf, num_topics, |V|)
-            topic_expansion_assignment_counts[sf][doc_topic_assignments[m]][expansion_assignment] += 1
+            # topic_expansion_assignment_counts[sf][doc_topic_assignments[m]][expansion_assignment] += 1
         topic_assignments.append(doc_topic_assignments)
         expansion_assignments.append(doc_expansion_assignments)
 
@@ -175,6 +175,8 @@ if __name__ == '__main__':
                 new_topic_assignment = int(np.random.choice(
                     np.arange(num_topics), p=topic_assignment_probs_norm, size=1)[0])
                 topic_assignments[n][m] = new_topic_assignment
+
+                topic_expansion_assignment_counts[sf][new_topic_assignment][new_expansion_assignment] += 1
 
         # Update SF-topic categorical distribution over expansion terms
         for sf in sfs:
