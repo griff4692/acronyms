@@ -69,7 +69,7 @@ if __name__ == '__main__':
     # Model Dimensions & Hyperparameters
     num_docs = 20
     num_acronyms = len(sfs)
-    embed_dim = 1
+    embed_dim = 10
     num_topics = semgroup_vocab.size()  # 15
 
     # Initialize latent variables
@@ -128,6 +128,10 @@ if __name__ == '__main__':
             # topic_expansion_assignment_counts[sf][doc_topic_assignments[m]][expansion_assignment] += 1
         topic_assignments.append(doc_topic_assignments)
         expansion_assignments.append(doc_expansion_assignments)
+
+    log_joint = compute_log_joint(
+        sfs, data, thetas, topic_assignments, betas, expansion_assignments, expansion_context_means)
+    print('Log Joint={} at Iteration {}'.format(log_joint, 0))
 
     MAX_ITER = 1000
     for iter_ct in range(1, MAX_ITER + 1):
