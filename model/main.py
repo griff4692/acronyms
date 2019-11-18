@@ -67,9 +67,9 @@ if __name__ == '__main__':
         print('\tVocabulary size of {} for {}'.format(sf_vocab[sf].size(), sf))
 
     # Model Dimensions & Hyperparameters
-    num_docs = 3
+    num_docs = 20
     num_acronyms = len(sfs)
-    embed_dim = 15
+    embed_dim = 1
     num_topics = semgroup_vocab.size()  # 15
 
     # Initialize latent variables
