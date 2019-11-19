@@ -6,8 +6,8 @@ from scipy.stats import norm
 from model.vocab import Vocab
 
 
-def compute_log_joint(sfs, data, betas, expansion_assignments, expansion_context_means):
-    # compute prior p(beta) for each topic
+def compute_log_joint(sfs, data, betas, beta_priors, expansion_assignments, expansion_context_means):
+    # compute prior p(beta; beta_priors[sf]) for each SF
     log_joint = 0.0
     for sf in sfs:
         for expansion_proportions in betas[sf]:
@@ -34,12 +34,12 @@ def safe_multiply(a, b):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser('Automatic Acronym Expansion')
     # Data Path Arguments
-    parser.add_argument('--acronyms_fn', default='../expansion_etl/data/derived/prototype_acronym_expansions.csv')
+    parser.add_argument('--acronyms_fn',
+                        default='../expansion_etl/data/derived/prototype_acronym_expansions_w_counts.csv')
     parser.add_argument('--semgroups_fn', default='../expansion_etl/data/original/umls_semantic_groups.txt')
 
     # Model Distribution Hyperparameters
-    parser.add_argument('--document_topic_prior', type=float, default=1.0)
-    parser.add_argument('--topic_expansion_prior', type=float, default=1.0)
+    parser.add_argument('--expansion_prior', type=float, default=1.0)
 
     args = parser.parse_args()
 
@@ -53,7 +53,13 @@ if __name__ == '__main__':
     print('Creating expansion vocabularies for {} short forms'.format(len(sfs)))
     for sf in sfs:
         sf_vocab[sf] = Vocab(sf)
-        sf_vocab[sf].add_tokens(acronyms[acronyms['sf'] == sf]['lf'].tolist())
+        sf_df = acronyms[acronyms['sf'] == sf]
+        nonzero_sf_df = sf_df[sf_df['lf_count'] > 0]
+        zero_sf_df = sf_df[sf_df['lf_count'] == 0]
+        zero_long_forms_agg = '$'.join(zero_sf_df['lf'].unique().tolist())
+        full_lfs_to_add = nonzero_sf_df['lf'].tolist() + [zero_long_forms_agg]
+        supports = nonzero_sf_df['lf_count'].tolist() + [0]
+        sf_vocab[sf].add_tokens(full_lfs_to_add, supports=supports)
         print('\tVocabulary size of {} for {}'.format(sf_vocab[sf].size(), sf))
 
     # Model Dimensions & Hyperparameters
@@ -65,13 +71,15 @@ if __name__ == '__main__':
     # Expansion proportions
     # For each sf, store the number of times an expansion was chosen for each topic
     betas = {}
+    beta_priors = {}
     expansion_context_embed_sums = {}
     expansion_assignment_counts = {}
     expansion_context_means = {}
     for sf in sfs:
         V = sf_vocab[sf].size()
-        beta_alpha_priors = np.array([args.document_topic_prior] * V)
-        betas[sf] = np.random.dirichlet(beta_alpha_priors)
+        beta_alpha_priors = np.add(np.array(sf_vocab[sf].supports), np.array([args.expansion_prior] * V))
+        beta_priors[sf] = beta_alpha_priors
+        betas[sf] = np.random.dirichlet(beta_priors[sf])
         expansion_assignment_counts[sf] = np.zeros([V, ])
         expansion_context_means[sf] = np.random.normal(loc=0.0, scale=1.0, size=(V, embed_dim))  # |V| x embed_dim
         expansion_context_embed_sums[sf] = np.zeros([V, embed_dim])
@@ -91,7 +99,7 @@ if __name__ == '__main__':
         expansion_assignment = np.random.randint(0, sf_vocab[sf].size(), size=1)[0]
         expansion_assignments.append(expansion_assignment)
 
-    log_joint = compute_log_joint(sfs, data, betas, expansion_assignments, expansion_context_means)
+    log_joint = compute_log_joint(sfs, data, betas, beta_priors, expansion_assignments, expansion_context_means)
     print('Log Joint={} at Iteration {}'.format(log_joint, 0))
 
     MAX_ITER = 1000
@@ -119,7 +127,7 @@ if __name__ == '__main__':
         # Update SF-topic categorical distribution over expansion terms
         for sf in sfs:
             V = sf_vocab[sf].size()
-            new_dist_over_expansions = np.random.dirichlet(expansion_assignment_counts[sf] + args.topic_expansion_prior)
+            new_dist_over_expansions = np.random.dirichlet(expansion_assignment_counts[sf] + args.expansion_prior)
             betas[sf] = new_dist_over_expansions
 
             # Update expansion Gaussian means
@@ -129,7 +137,7 @@ if __name__ == '__main__':
                     new_means = (expansion_context_embed_sums[sf][expansion_idx, :] / ct)
                     expansion_context_means[sf][expansion_idx] = new_means
         log_joint = compute_log_joint(
-            sfs, data, betas, expansion_assignments, expansion_context_means)
+            sfs, data, betas, beta_priors, expansion_assignments, expansion_context_means)
         print('Log Joint={} at Iteration {}'.format(log_joint, iter_ct))
 
         # Reset count variables to 0
