@@ -6,12 +6,15 @@ from scipy.stats import norm
 from model.vocab import Vocab
 
 
-def compute_log_joint(sfs, data, betas, beta_priors, expansion_assignments, expansion_context_means):
+def compute_log_joint(args, sfs, data, betas, beta_priors, expansion_assignments, expansion_context_means):
     # compute prior p(beta; beta_priors[sf]) for each SF
     log_joint = 0.0
     for sf in sfs:
         for expansion_proportions in betas[sf]:
             log_joint += 0.0  # compute dirichlet pdf based on expansion_proportions as sample
+        log_joint += np.log(
+            norm(args.context_prior_mean, args.context_prior_var).pdf(expansion_context_means[sf])
+        ).sum()
 
     # compute prior p(theta) for each document
     for n, (sf, ce) in enumerate(data):
@@ -40,6 +43,10 @@ if __name__ == '__main__':
 
     # Model Distribution Hyperparameters
     parser.add_argument('--expansion_prior', type=float, default=1.0)
+
+    parser.add_argument('--context_prior_mean', type=float, default=0.0)
+    parser.add_argument('--context_prior_var', type=float, default=1.0)
+    parser.add_argument('--context_likelihood_var', type=float, default=1.0)
 
     args = parser.parse_args()
 
@@ -81,7 +88,8 @@ if __name__ == '__main__':
         beta_priors[sf] = beta_alpha_priors
         betas[sf] = np.random.dirichlet(beta_priors[sf])
         expansion_assignment_counts[sf] = np.zeros([V, ])
-        expansion_context_means[sf] = np.random.normal(loc=0.0, scale=1.0, size=(V, embed_dim))  # |V| x embed_dim
+        expansion_context_means[sf] = np.random.normal(
+            loc=args.context_prior_mean, scale=args.context_prior_var, size=(V, embed_dim))  # |V| x embed_dim
         expansion_context_embed_sums[sf] = np.zeros([V, embed_dim])
 
     # Dummy data
@@ -99,7 +107,7 @@ if __name__ == '__main__':
         expansion_assignment = np.random.randint(0, sf_vocab[sf].size(), size=1)[0]
         expansion_assignments.append(expansion_assignment)
 
-    log_joint = compute_log_joint(sfs, data, betas, beta_priors, expansion_assignments, expansion_context_means)
+    log_joint = compute_log_joint(args, sfs, data, betas, beta_priors, expansion_assignments, expansion_context_means)
     print('Log Joint={} at Iteration {}'.format(log_joint, 0))
 
     MAX_ITER = 1000
@@ -112,7 +120,7 @@ if __name__ == '__main__':
                 expansion_lprob = 0.0
                 assignment_means = expansion_context_means[sf][v]
                 for eidx in range(embed_dim):
-                    expansion_lprob += np.log(norm(assignment_means[eidx], 1).pdf(ce[eidx]))
+                    expansion_lprob += np.log(norm(assignment_means[eidx], args.context_likelihood_var).pdf(ce[eidx]))
                 expansion_assignment_log_probs[v] = expansion_lprob
             expansion_assignment_probs = np.exp(expansion_assignment_log_probs)
             expansion_assignment_probs_norm = expansion_assignment_probs / expansion_assignment_probs.sum()
@@ -133,11 +141,17 @@ if __name__ == '__main__':
             # Update expansion Gaussian means
             for expansion_idx in range(V):
                 ct = float(expansion_assignment_counts[sf][expansion_idx])
-                if ct > 0:
-                    new_means = (expansion_context_embed_sums[sf][expansion_idx, :] / ct)
-                    expansion_context_means[sf][expansion_idx] = new_means
+                empirical_sums = expansion_context_embed_sums[sf][expansion_idx, :]
+                empirical_mean = empirical_sums / max(ct, 1.0)
+
+                posterior_mean_num = (args.context_prior_mean / args.context_prior_var +
+                                (ct * empirical_mean) / args.context_likelihood_var)
+                posterior_mean_denom = (1.0 / args.context_prior_var) + (ct / args.context_likelihood_var)
+                posterior_mean = posterior_mean_num / posterior_mean_denom
+                posterior_var = 1.0 / posterior_mean_denom
+                expansion_context_means[sf][expansion_idx] = np.random.normal(loc=posterior_mean, scale=posterior_var)
         log_joint = compute_log_joint(
-            sfs, data, betas, beta_priors, expansion_assignments, expansion_context_means)
+            args, sfs, data, betas, beta_priors, expansion_assignments, expansion_context_means)
         print('Log Joint={} at Iteration {}'.format(log_joint, iter_ct))
 
         # Reset count variables to 0
