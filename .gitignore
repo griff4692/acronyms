@@ -6,3 +6,7 @@ context_embeddings/data/
 __pycache__/
 expansion_etl/__pycache__/
 expansion_etl/expansion_ml/prototyping/.ipynb_checkpoints/
+model/__pycache__/
+context_embeddings/__pycache__/
+model/experiments/
+
