@@ -9,7 +9,7 @@ if __name__ == '__main__':
     with open('data/key_order.json', 'r') as fd:
         keys = json.load(fd)
 
-    with open('data/columbia_embeddings.npy', 'rb') as fd:
+    with open('data/embeddings.npy', 'rb') as fd:
         embeddings = np.load(fd)
 
     acronyms_df = pd.read_csv('../expansion_etl/data/derived/prototype_acronym_expansions_w_counts.csv')

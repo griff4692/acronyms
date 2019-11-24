@@ -5,7 +5,7 @@ PROCESS_EMBED_LAYERS = {
     'mean': torch.mean,
     'first_layer': lambda x: x[0],
     'last_layer': lambda x: x[-1],
-    'last_layers': lambda x: x[-4:].sum(0).data.numpy()
+    'last_layers': lambda x: x[-4:].mean(0).data.numpy()
 }
 SELECTION_METHOD = 'last_layers'
 EMBEDDING_PATH = '/home/ga2530/acronyms/context_embeddings/data/embeddings.dict'
