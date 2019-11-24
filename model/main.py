@@ -1,5 +1,7 @@
 import json
+import pickle
 import os
+import shutil
 
 import argparse
 import random
@@ -7,32 +9,63 @@ import pandas as pd
 import numpy as np
 from scipy import spatial
 from scipy.stats import norm
+from tqdm import tqdm
 
 from utils import render_args
 from vocab import Vocab
 
 
+class SerializedParams:
+    def __init__(self, outpath):
+        self.outpath = outpath
+        self.param_names = []
+        if os.path.exists(outpath):
+            print('Clearing previous contents of {}'.format(outpath))
+            shutil.rmtree(outpath, ignore_errors=True)
+        os.mkdir(outpath)
+
+    def register_param(self, name, value):
+        assert name not in self.param_names
+        self.param_names.append(name)
+        setattr(self, name, value)
+
+    def to_disc(self, epoch):
+        dict = {}
+        for param in self.param_names:
+            dict[param] = getattr(self, param)
+        with open(os.path.join(self.outpath, 'params_{}.pkl'.format(epoch)), 'wb') as fd:
+            pickle.dump(self, fd)
+
+    @classmethod
+    def from_disc(cls, fp):
+        sm = SerializedParams()
+        with open(fp) as fd:
+            dict = pickle.load(fd)
+        for k, v in dict.items():
+            sm.register_param(k, v)
+        return sm
+
+
 def compute_log_joint(args, sfs, data, betas, beta_priors, expansion_assignments, expansion_context_means,
                       expansion_context_mean_priors):
     # compute prior p(beta; beta_priors[sf]) for each SF
-    log_joint = 0.0
+    prior_log_joint = 0.0
     for sf in sfs:
         for expansion_proportions in betas[sf]:
-            log_joint += 0.0  # compute dirichlet pdf based on expansion_proportions as sample
-        log_joint += np.log(
+            prior_log_joint += 0.0  # compute dirichlet pdf based on expansion_proportions as sample
+        prior_log_joint += np.log(
             norm(expansion_context_mean_priors[sf], args.context_prior_var).pdf(expansion_context_means[sf])
         ).sum()
 
-    # compute prior p(theta) for each document
+    data_log_joint = 0.0
     for n, (sf, _, _, ce) in enumerate(data):
         expansion_assignment = expansion_assignments[n]
-
-        # p(expansion_z | topic_z, betas, sf)
-        log_joint += np.log(betas[sf][expansion_assignment])
+        data_log_joint += np.log(betas[sf][expansion_assignment])
         assignment_means = expansion_context_means[sf][expansion_assignment]
-        log_joint += log_context_likelihood(args, assignment_means, ce)
+        data_log_joint += log_context_likelihood(args, assignment_means, ce)
 
-    return log_joint
+    log_joint_normalized = prior_log_joint + data_log_joint / float(len(data))
+    return log_joint_normalized
 
 
 def safe_multiply(a, b):
@@ -44,9 +77,25 @@ def log_context_likelihood(args, expansion_means, context_vec):
         distance = spatial.distance.cosine(expansion_means, context_vec)
         distance_normalized = 0.5 * distance + 0.5
         return np.log(distance_normalized)
-    return sum(
-        map(lambda x: np.log(norm(x[0], args.context_likelihood_var).pdf(x[1])), zip(expansion_means, context_vec))
-    )
+    return sum(norm(expansion_means, args.context_likelihood_var).logpdf(context_vec))
+
+
+def sample_expansion_term(num_expansions, betas, expansion_context_means):
+    # Re-sample expansion assignment probabilities
+    V = sf_vocab[sf].size()
+    expansion_assignment_log_probs = np.zeros([num_expansions, ])
+    for v in range(num_expansions):
+        expansion_ll = np.log(betas[sf][v])
+        context_expansion_ll = log_context_likelihood(args, expansion_context_means[sf][v], ce)
+        expansion_assignment_log_probs[v] = expansion_ll + context_expansion_ll
+
+    # log normalization trick to avoid precision underflow/overflow
+    # https://stats.stackexchange.com/questions/66616/converting-normalizing-very-small-likelihood-values-to-probability
+    max_lprob = expansion_assignment_log_probs.max()
+    expansion_assignment_probs = np.exp(expansion_assignment_log_probs - max_lprob)
+    expansion_assignment_probs_norm = expansion_assignment_probs / expansion_assignment_probs.sum()
+    new_expansion_assignment = np.random.choice(np.arange(num_expansions), p=expansion_assignment_probs_norm)
+    return new_expansion_assignment
 
 
 def instantiate_context_priors(args, sf_vocab):
@@ -76,6 +125,9 @@ if __name__ == '__main__':
     parser.add_argument('--acronyms_fn',
                         default='../expansion_etl/data/derived/prototype_acronym_expansions_w_counts.csv')
     parser.add_argument('--semgroups_fn', default='../expansion_etl/data/original/umls_semantic_groups.txt')
+
+    # Experimental Parameters
+    parser.add_argument('--experiment', default='debug', help='name of experiment')
 
     # Model Parameters
     parser.add_argument('--max_n', default=1000, type=int, help='Maximum examples on which to run model.')
@@ -135,6 +187,14 @@ if __name__ == '__main__':
         expansion_context_mean_priors[sf] = priors
         expansion_context_embed_sums[sf] = np.zeros([V, args.embed_dim])
 
+    # Register params and prepare directory
+    serialized_params = SerializedParams(outpath=os.path.join('experiments', args.experiment))
+    serialized_params.register_param('betas', betas)
+    serialized_params.register_param('beta_priors', beta_priors)
+    serialized_params.register_param('expansion_context_means', expansion_context_means)
+    serialized_params.register_param('expansion_context_mean_priors', expansion_context_mean_priors)
+
+    # Load data
     data = []
     for sf in sfs:
         embed_fn = '../context_embeddings/data/sf_embeddings/{}.npy'.format(sf)
@@ -152,34 +212,35 @@ if __name__ == '__main__':
         print('Shrinking data from {} to {}'.format(len(data), args.max_n))
         data = data[:args.max_n]
 
-    # Assignment variables: first draw a topic and then draw an expansion from that topic
-    expansion_assignments = []  # N
-    for n, (sf, _, _, ce) in enumerate(data):
-        expansion_assignment = np.random.randint(0, sf_vocab[sf].size(), size=1)[0]
-        expansion_assignments.append(expansion_assignment)
+    train_fract = 0.8
+    train_split_idx = round(len(data) * 0.8)
+    train_data, val_data = data[:train_split_idx], data[train_split_idx:]
 
-    log_joint = compute_log_joint(args, sfs, data, betas, beta_priors, expansion_assignments, expansion_context_means,
-                                  expansion_context_mean_priors)
-    print('Log Joint={} at Iteration {}'.format(log_joint, 0))
+    # Assignment variables: first draw a topic and then draw an expansion from that topic
+    train_expansion_assignments = []  # N
+    for n, (sf, _, _, ce) in enumerate(train_data):
+        expansion_assignment = np.random.randint(0, sf_vocab[sf].size(), size=1)[0]
+        train_expansion_assignments.append(expansion_assignment)
+    val_expansion_assignments = []  # N
+    for n, (sf, _, _, ce) in enumerate(val_data):
+        expansion_assignment = np.random.randint(0, sf_vocab[sf].size(), size=1)[0]
+        val_expansion_assignments.append(expansion_assignment)
+
+    train_log_joint = compute_log_joint(args, sfs, train_data, betas, beta_priors, train_expansion_assignments,
+                                  expansion_context_means, expansion_context_mean_priors)
+    val_log_joint = compute_log_joint(args, sfs, val_data, betas, beta_priors, val_expansion_assignments,
+                                        expansion_context_means, expansion_context_mean_priors)
+    print('Train Log Joint={}, Val Log Joint={} at Iteration {}'.format(train_log_joint, val_log_joint, 0))
 
     MAX_ITER = 1000
     for iter_ct in range(1, MAX_ITER + 1):
-        for n, (sf, _, _, ce) in enumerate(data):
-            # Re-sample expansion assignment probabilities
-            V = sf_vocab[sf].size()
-            expansion_assignment_log_probs = np.zeros([V, ])
-            for v in range(V):
-                expansion_ll = np.log(betas[sf][v])
-                context_expansion_ll = log_context_likelihood(args, expansion_context_means[sf][v], ce)
-                expansion_assignment_log_probs[v] = expansion_ll + context_expansion_ll
+        # Serialize latest sample of latent variables
+        serialized_params.to_disc(epoch=iter_ct)
 
-            # log normalization trick to avoid precision underflow/overflow
-            # https://stats.stackexchange.com/questions/66616/converting-normalizing-very-small-likelihood-values-to-probability
-            max_lprob = expansion_assignment_log_probs.max()
-            expansion_assignment_probs = np.exp(expansion_assignment_log_probs - max_lprob)
-            expansion_assignment_probs_norm = expansion_assignment_probs / expansion_assignment_probs.sum()
-            new_expansion_assignment = np.random.choice(np.arange(V), p=expansion_assignment_probs_norm)
-            expansion_assignments[n] = new_expansion_assignment
+        for n in tqdm(range(len(train_data))):
+            (sf, _, _, ce) = train_data[n]
+            new_expansion_assignment = sample_expansion_term(sf_vocab[sf].size(), betas, expansion_context_means)
+            train_expansion_assignments[n] = new_expansion_assignment
 
             # Update the assignment mean sums
             curr_sum = expansion_context_embed_sums[sf][new_expansion_assignment]
@@ -204,10 +265,20 @@ if __name__ == '__main__':
                 posterior_mean = posterior_mean_num / posterior_mean_denom
                 posterior_var = 1.0 / posterior_mean_denom
                 expansion_context_means[sf][expansion_idx] = np.random.normal(loc=posterior_mean, scale=posterior_var)
-        log_joint = compute_log_joint(
-            args, sfs, data, betas, beta_priors, expansion_assignments, expansion_context_means,
+        train_log_joint = compute_log_joint(
+            args, sfs, train_data, betas, beta_priors, train_expansion_assignments, expansion_context_means,
             expansion_context_mean_priors)
-        print('Log Joint={} at Iteration {}'.format(log_joint, iter_ct))
+
+        # Re-assign validation data
+        for n in range(len(val_data)):
+            (sf, _, _, ce) = val_data[n]
+            new_expansion_assignment = sample_expansion_term(sf_vocab[sf].size(), betas, expansion_context_means)
+            val_expansion_assignments[n] = new_expansion_assignment
+        val_log_joint = compute_log_joint(
+            args, sfs, val_data, betas, beta_priors, val_expansion_assignments, expansion_context_means,
+            expansion_context_mean_priors)
+
+        print('Train Log Joint={}, Val Log Joint={} at Iteration {}'.format(train_log_joint, val_log_joint, iter_ct))
 
         # Reset count variables to 0
         for sf in sfs:
