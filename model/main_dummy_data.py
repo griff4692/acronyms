@@ -1,12 +1,9 @@
-import os
-
 import argparse
 import pandas as pd
 import numpy as np
-from scipy import spatial
 from scipy.stats import norm
 
-from vocab import Vocab
+from model.vocab import Vocab
 
 
 def compute_log_joint(args, sfs, data, betas, beta_priors, expansion_assignments, expansion_context_means):
@@ -37,32 +34,12 @@ def safe_multiply(a, b):
     return np.exp(np.log(a + 1e-5) + np.log(b + 1e-5))
 
 
-def instantiate_context_priors(args, sf_vocab):
-    # Look up sf in ../context_embeddings/data/lf_embeddings
-    priors = []
-    for i in range(sf_vocab.size()):
-        lf = sf_vocab.get_token(i)
-        fn = '../context_embeddings/data/lf_embeddings/{}.npy'.format(lf)
-        vec = np.random.normal(
-            loc=args.context_prior_mean, scale=args.context_prior_var, size=(args.embed_dim, ))  # |V| x embed_dim
-        if os.path.exists(fn):
-            vectors = np.load(open(fn, 'rb'))
-            if len(vectors) > 0 and False:
-                vec = np.tanh(vectors.mean(0))
-        priors.append(vec)
-    return np.array(priors)
-
-
 if __name__ == '__main__':
     parser = argparse.ArgumentParser('Automatic Acronym Expansion')
     # Data Path Arguments
     parser.add_argument('--acronyms_fn',
                         default='../expansion_etl/data/derived/prototype_acronym_expansions_w_counts.csv')
     parser.add_argument('--semgroups_fn', default='../expansion_etl/data/original/umls_semantic_groups.txt')
-
-    # Model Parameters
-    parser.add_argument('--embed_dim', default=768, type=int, help='Fixed by BERT embedding dim')
-    parser.add_argument('-use_bert_context_prior', action='store_true', default=False)
 
     # Model Distribution Hyperparameters
     parser.add_argument('--expansion_prior', type=float, default=1.0)
@@ -95,7 +72,7 @@ if __name__ == '__main__':
     # Model Dimensions & Hyperparameters
     N = 20
     num_acronyms = len(sfs)
-    embed_dim = 768
+    embed_dim = 10
 
     # Initialize latent variables
     # Expansion proportions
@@ -111,7 +88,8 @@ if __name__ == '__main__':
         beta_priors[sf] = beta_alpha_priors
         betas[sf] = np.random.dirichlet(beta_priors[sf])
         expansion_assignment_counts[sf] = np.zeros([V, ])
-        expansion_context_means[sf] = instantiate_context_priors(args, sf_vocab[sf])
+        expansion_context_means[sf] = np.random.normal(
+            loc=args.context_prior_mean, scale=args.context_prior_var, size=(V, embed_dim))  # |V| x embed_dim
         expansion_context_embed_sums[sf] = np.zeros([V, embed_dim])
 
     # Dummy data
@@ -139,13 +117,10 @@ if __name__ == '__main__':
             V = sf_vocab[sf].size()
             expansion_assignment_log_probs = np.zeros([V, ])
             for v in range(V):
-                expansion_lprob = np.log(betas[sf][v])
+                expansion_lprob = 0.0
                 assignment_means = expansion_context_means[sf][v]
-                distance = spatial.distance.cosine(assignment_means, ce)
-                distance_norm = 0.5 * distance + 0.5
-                expansion_lprob += np.log(distance_norm)
-                # for eidx in range(embed_dim):
-                #     expansion_lprob += np.log(norm(assignment_means[eidx], args.context_likelihood_var).pdf(ce[eidx]))
+                for eidx in range(embed_dim):
+                    expansion_lprob += np.log(norm(assignment_means[eidx], args.context_likelihood_var).pdf(ce[eidx]))
                 expansion_assignment_log_probs[v] = expansion_lprob
             expansion_assignment_probs = np.exp(expansion_assignment_log_probs)
             expansion_assignment_probs_norm = expansion_assignment_probs / expansion_assignment_probs.sum()
