@@ -2,14 +2,14 @@ import json
 
 import pandas as pd
 
-from expansion_etl.extract_context import ContextExtractor, ContextType
+from prototype.context_extraction.extract_context_utils import ContextExtractor, ContextType
 
 
 def get_all_contexts(context_extractor, doc_id, doc_string, sfs, lfs):
     contexts, doc_ids, forms = [], [], []
     config = {
         'type': ContextType.WORD,
-        'size': 100
+        'size': 25
     }
 
     for sf in sfs:
@@ -27,11 +27,11 @@ def get_all_contexts(context_extractor, doc_id, doc_string, sfs, lfs):
     return list(zip(forms, doc_ids, contexts))
 
 
-if __name__ == '__main__':
+def extract_columbia_contexts(in_fp):
     years = list(range(1988, 2015))
     context_extractor = ContextExtractor()
     contexts = []
-    df = pd.read_csv('../data/derived/prototype_acronym_expansions.csv')
+    df = pd.read_csv(in_fp)
 
     sfs = df['sf'].unique().tolist()
     lfs = df['lf'].unique().tolist()
@@ -40,7 +40,6 @@ if __name__ == '__main__':
     for year in years:
         print('Processing Columbia Discharge summaries in {}'.format(year))
         doc_string = ''
-        start_line_idx = 0
         # Must be run on Columbia's DBMI rashi server
         file = open('/nlp/projects/medical_wsd/data/dsum_corpus_02/{}'.format(year), 'r')
         for line_idx, line in enumerate(file):
@@ -52,11 +51,15 @@ if __name__ == '__main__':
                 if len(doc_contexts) > 0:
                     print('New Context Count={}'.format(context_ct))
                 doc_string = ''
-                start_line_idx = line_idx
             else:
                 doc_string += line
+    out_fn = 'data/derived/columbia_prototype_contexts.csv'
     df = pd.DataFrame(contexts, columns=['form', 'doc_id', 'context'])
     print('Saving {} contexts from Columbia discharge summaries.'.format(df.shape[0]))
-    df.to_csv('./expansion_etl/data/derived/columbia_prototype_contexts.csv', index=False)
-    json.dump(contexts, open('./expansion_etl/data/derived/columbia_prototype_contexts.json', 'w'))
+    df.to_csv(out_fn, index=False)
     print('Done processing Columbia discharge summaries!')
+    return out_fn
+
+
+if __name__ == '__main__':
+    extract_columbia_contexts()

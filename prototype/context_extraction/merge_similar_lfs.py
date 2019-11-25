@@ -4,13 +4,13 @@ import os
 
 import pandas as pd
 
-from distance import jaccard_overlap
+from utils import jaccard_overlap
 from source_mining.umls.extract_expansions import search
 
 
 apikey = 'b3a1775f-e041-43c8-b529-03c843ff8934'
-PATH_LF = 'data/derived/standardized_acronym_expansions_with_cui.csv'
-SAVE_DIR = 'data/derived/merged_lf/'
+PATH_LF = 'data/standardized_acronym_expansions_with_cui.csv'
+SAVE_DIR = 'data/merged_lf/'
 KEY_SF = 'sf'
 KEY_LF = 'lf'
 KEY_LF_BASE = 'lf_base'

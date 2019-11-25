@@ -1,7 +1,7 @@
 import os
 import json
 
-from utils import standardize_upper
+from expansion_etl.utils import standardize_upper
 
 
 def extract_acronyms_list(fn, use_cached=False):

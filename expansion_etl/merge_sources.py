@@ -3,7 +3,7 @@ import os
 from nltk.corpus import stopwords
 import pandas as pd
 
-from utils import standardize_lower, standardize_upper
+from expansion_etl.utils import standardize_lower, standardize_upper
 
 
 NULL_LF = 'no results'

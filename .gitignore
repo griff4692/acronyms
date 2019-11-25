@@ -1,5 +1,5 @@
 expansion_etl/data/derived/
-expansion_etl/context_extraction/data/
+prototype/context_extraction/data/
 prototype/context_embeddings/data/
 .idea/
 *.DS_Store
@@ -9,4 +9,3 @@ expansion_etl/expansion_ml/prototyping/.ipynb_checkpoints/
 model/__pycache__/
 context_embeddings/__pycache__/
 model/experiments/
-
