@@ -3,7 +3,6 @@ import json
 import argparse
 
 from add_cui import add_cui
-from filter_inclusion import filter_inclusion
 from standardize_expansions import standardize_expansions
 from extract_acronyms_list import extract_acronyms_list
 from merge_sources import merge_sources
@@ -30,9 +29,7 @@ def etl(args, sources, fp):
     standard_fp = standardize_expansions(merged_fp, use_cached=args.use_cached)
     print('Adding UMLS Concepts to standardized LFs with MetaMap...')
     cui_fp = add_cui(standard_fp, use_cached=args.use_cached)
-    print("Filtering for is_accurate and is_clinical_relevant")
-    inclusion_fp = filter_inclusion(cui_fp, use_cached=args.use_cached)
-    return inclusion_fp
+    return cui_fp
 
 
 if __name__ == '__main__':

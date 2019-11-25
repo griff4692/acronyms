@@ -10,9 +10,8 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     INPATH = './data/derived/merged_lf/'
-    acronyms = set(map(lambda x: x.strip(),
-        open('./data/original/prototype_acronyms.txt', 'r'))
-    )
+    with open('./data/original/prototype_acronyms.txt', 'r') as fd:
+        acronyms = set(map(lambda x: x.strip(), fd))
 
     df = None
     for acronym in acronyms:
