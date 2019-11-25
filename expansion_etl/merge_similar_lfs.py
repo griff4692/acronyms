@@ -9,7 +9,7 @@ from source_mining.umls.extract_expansions import search
 
 
 apikey = 'b3a1775f-e041-43c8-b529-03c843ff8934'
-PATH_LF = 'data/derived/prototype_acronym_expansions_final.csv'
+PATH_LF = 'data/derived/standardized_acronym_expansions_with_cui.csv'
 SAVE_DIR = 'data/derived/merged_lf/'
 KEY_SF = 'sf'
 KEY_LF = 'lf'
