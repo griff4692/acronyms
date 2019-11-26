@@ -1,5 +1,3 @@
-import json
-
 import pandas as pd
 
 from prototype.context_extraction.extract_context_utils import ContextExtractor, ContextType
@@ -53,7 +51,7 @@ def extract_columbia_contexts(in_fp):
                 doc_string = ''
             else:
                 doc_string += line
-    out_fn = 'data/derived/columbia_prototype_contexts.csv'
+    out_fn = 'data/columbia_prototype_contexts.csv'
     df = pd.DataFrame(contexts, columns=['form', 'doc_id', 'context'])
     print('Saving {} contexts from Columbia discharge summaries.'.format(df.shape[0]))
     df.to_csv(out_fn, index=False)
