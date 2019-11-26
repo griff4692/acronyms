@@ -27,3 +27,19 @@ def collect(acronyms_fp, source_paths):
     full_df.to_csv(out_fn, index=False)
 
     return out_fn
+
+
+if __name__ == '__main__':
+    import os
+    tmp_batch_dir = './data/mimic_context_batches/'
+    out_fn = 'data/mimic_prototype_contexts.csv'
+    mimic_chunk_dfs = []
+    mimic_chunks = os.listdir(tmp_batch_dir)
+    print('Collecting chunks of processed MIMIC contexts...')
+    for chunk_idx, fn in enumerate(mimic_chunks):
+        chunk_df = pd.read_csv(os.path.join(tmp_batch_dir, fn))
+        if chunk_df.shape[0] > 0:
+            mimic_chunk_dfs.append(chunk_df)
+    mimic_df = pd.concat(mimic_chunk_dfs, sort=False, axis=0)
+    print(mimic_df.shape)
+    mimic_df.to_csv(out_fn, index=False)
