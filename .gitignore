@@ -9,3 +9,5 @@ expansion_etl/expansion_ml/prototyping/.ipynb_checkpoints/
 model/__pycache__/
 context_embeddings/__pycache__/
 model/experiments/
+/prototype/context_embeddings/embeddings/
+/context_embeddings/embeddings_pca.zip
