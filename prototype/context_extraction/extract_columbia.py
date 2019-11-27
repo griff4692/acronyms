@@ -14,13 +14,13 @@ def get_all_contexts(context_extractor, doc_id, doc_string, sfs, lfs):
 
     for sf in sfs:
         c = context_extractor.get_contexts_for_short_form(sf, doc_string, config, allow_inflections=False,
-                                                                  ignore_case=False)
+                                                          ignore_case=False)
         forms += [sf] * len(c)
         contexts += c
 
     for lf in lfs:
         c = context_extractor.get_contexts_for_long_form(lf, doc_string, config, allow_inflections=True,
-                                                                 ignore_case=True)
+                                                         ignore_case=True)
         forms += [lf] * len(c)
         contexts += c
     doc_ids += [doc_id] * len(contexts)
@@ -83,4 +83,4 @@ def extract_columbia_contexts(in_fp):
 
 
 if __name__ == '__main__':
-    extract_columbia_contexts('data/merged_acronym_expansions.csv')
+    extract_columbia_contexts('data/merged_prototype_expansions.csv')

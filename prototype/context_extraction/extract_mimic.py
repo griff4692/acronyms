@@ -28,9 +28,10 @@ def get_all_contexts(context_extractor, doc_id, doc_string, sfs, lfs):
 
 
 def dump_batch_contexts(contexts, line_idx, tmp_batch_dir):
-    df = pd.DataFrame(contexts, columns=['form', 'doc_id', 'context'])
-    print('Saving {} contexts from MIMIC with end index={}.'.format(df.shape[0], line_idx))
-    df.to_csv(os.path.join(tmp_batch_dir, 'prototype_contexts_{}.csv'.format(line_idx)), index=False)
+    if len(contexts) > 0:
+        df = pd.DataFrame(contexts, columns=['form', 'doc_id', 'context'])
+        print('Saving {} contexts from MIMIC with end index={}.'.format(df.shape[0], line_idx))
+        df.to_csv(os.path.join(tmp_batch_dir, 'prototype_contexts_{}.csv'.format(line_idx)), index=False)
 
 
 def extract_mimic_contexts(in_fp, mimic_fp=PATH_TO_MIMIC):
@@ -67,6 +68,7 @@ def extract_mimic_contexts(in_fp, mimic_fp=PATH_TO_MIMIC):
                 batch_contexts = []
             final_line_idx = line_idx
 
+        print('Extracting final contexts.')
         doc_id = '{}_{}'.format('mimic', final_line_idx)
         if len(doc_string) > 0:
             doc_contexts = get_all_contexts(context_extractor, doc_id, doc_string, sfs, lfs)
@@ -83,6 +85,7 @@ def extract_mimic_contexts(in_fp, mimic_fp=PATH_TO_MIMIC):
         if chunk_df.shape[0] > 0:
             mimic_chunk_dfs.append(chunk_df)
     mimic_df = pd.concat(mimic_chunk_dfs, sort=False, axis=0)
+    mimic_df.drop_duplicates(inplace=True)
     mimic_df.to_csv(out_fn, index=False)
     print('Done processing MIMIC notes!')
     return out_fn
