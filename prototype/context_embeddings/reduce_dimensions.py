@@ -2,8 +2,10 @@ import glob
 import re
 from enum import Enum
 
+import matplotlib.pyplot as plt
 import numpy as np
 from sklearn.decomposition import PCA
+from sklearn.preprocessing import MinMaxScaler
 
 
 class ReductionTechnique(Enum):
@@ -11,7 +13,6 @@ class ReductionTechnique(Enum):
     This enumeration lists all the type of techniques that can be used for dimensionality reduction
     """
     PCA = 0
-    UMAP = 1
 
 
 class DimensionalityReducer:
@@ -71,12 +72,28 @@ class DimensionalityReducer:
             reduced_file_embedding = self.reduced_embeddings[start_index:end_index]
             np.save(file_name, reduced_file_embedding)
 
+    def optimize_reduced_dimensions_pca(self):
+        """
+        This method is used to optimize the reduced embeddings dimension
+        :return:
+        """
+        scaler = MinMaxScaler(feature_range=[0, 1])
+        embeddings_rescaled = scaler.fit_transform(self.embeddings)
+        pca = PCA().fit(embeddings_rescaled)
+        # Plotting the Cumulative Summation of the Explained Variance
+        plt.figure()
+        plt.plot(np.cumsum(pca.explained_variance_ratio_))
+        plt.xlabel('Number of Components')
+        plt.ylabel('Variance (%)')  # for each component
+        plt.title('BERT Embedding Dimensions Variance')
+        plt.show()
+
 
 if __name__ == '__main__':
     files = glob.glob('embeddings/lf_embeddings/*.npy')
     files.extend(glob.glob('embeddings/sf_embeddings/*.npy'))
     reducer = DimensionalityReducer(ReductionTechnique.PCA)
     reducer.get_all_embeddings(files)
-    reducer.reduce_dimensions()
-    reducer.write_reduced_embeddings()
-    print('ok')
+    reducer.optimize_reduced_dimensions_pca()
+    # reducer.reduce_dimensions()
+    # reducer.write_reduced_embeddings()
