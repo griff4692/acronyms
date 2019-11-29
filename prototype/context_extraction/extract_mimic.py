@@ -34,7 +34,12 @@ def dump_batch_contexts(contexts, line_idx, tmp_batch_dir):
         df.to_csv(os.path.join(tmp_batch_dir, 'prototype_contexts_{}.csv'.format(line_idx)), index=False)
 
 
-def extract_mimic_contexts(in_fp, mimic_fp=PATH_TO_MIMIC):
+def extract_mimic_contexts(in_fp, mimic_fp=PATH_TO_MIMIC, use_cached=False):
+    out_fn = 'data/mimic_prototype_contexts.csv'
+
+    if use_cached and os.path.exists(out_fn):
+        return out_fn
+
     context_extractor = ContextExtractor()
     batch_contexts = []
     df = pd.read_csv(in_fp)
@@ -76,7 +81,6 @@ def extract_mimic_contexts(in_fp, mimic_fp=PATH_TO_MIMIC):
         if len(batch_contexts) > 0:
             dump_batch_contexts(batch_contexts, final_line_idx, tmp_batch_dir)
 
-    out_fn = 'data/mimic_prototype_contexts.csv'
     mimic_chunk_dfs = []
     mimic_chunks = os.listdir(tmp_batch_dir)
     print('Collecting chunks of processed MIMIC contexts...')

@@ -1,11 +1,14 @@
 import os
+import sys
+sys.path.insert(0, os.path.expanduser('~/acronyms/'))
 
-import json
 import pandas as pd
 
 import argparse
 
+from prototype.context_extraction.add_counts_to_prototype import add_counts
 from prototype.context_extraction.collect_contexts import collect
+from prototype.context_extraction.downsample_contexts import downsample
 from prototype.context_extraction.extract_columbia import extract_columbia_contexts
 from prototype.context_extraction.extract_mimic import extract_mimic_contexts
 from prototype.context_extraction.merge_similar_lfs import merge_concurrently
@@ -43,11 +46,21 @@ def extract_contexts(args, fp):
         merged_df.to_csv(os.path.join('data', 'merged_prototype_expansions.csv'), index=False)
 
     # Extract contexts for MIMIC and Columbia
-    mimic_out_fn = extract_mimic_contexts(merge_out_fp)
-    columbia_out_fn = extract_columbia_contexts(merge_out_fp)
+    mimic_out_fn = extract_mimic_contexts(merge_out_fp, use_cached=args.use_cached)
+    columbia_out_fn = extract_columbia_contexts(merge_out_fp, use_cached=args.use_cached)
 
-    combined_fn = collect(merge_out_fp, [('mimic', mimic_out_fn), ('columbia', columbia_out_fn)])
-    return combined_fn
+    sources = [('mimic', mimic_out_fn), ('columbia', columbia_out_fn)]
+    combined_fn = collect(merge_out_fp, sources, use_cached=args.use_cached)
+
+    downsampled_fn = downsample(combined_fn, use_cached=args.use_cached)
+
+    acronym_counts_fn = add_counts(merge_out_fp, combined_fn)
+
+    output_fns = {
+        'acronyms': acronym_counts_fn,
+        'contexts': downsampled_fn
+    }
+    return output_fns
 
 
 if __name__ == '__main__':

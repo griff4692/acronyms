@@ -27,7 +27,11 @@ def get_all_contexts(context_extractor, doc_id, doc_string, sfs, lfs):
     return list(zip(forms, doc_ids, contexts))
 
 
-def extract_columbia_contexts(in_fp):
+def extract_columbia_contexts(in_fp, use_cached=False):
+    out_fn = 'data/columbia_prototype_contexts.csv'
+    if use_cached and os.path.exists(out_fn):
+        return out_fn
+
     years = list(range(1988, 2015))
     context_extractor = ContextExtractor()
     df = pd.read_csv(in_fp)
@@ -37,7 +41,6 @@ def extract_columbia_contexts(in_fp):
 
     tmp_batch_dir = 'data/columbia_context_batches'
 
-    context_ct = 0
     for year in years:
         contexts = []
         print('Processing Columbia Discharge summaries in {}'.format(year))
@@ -54,19 +57,14 @@ def extract_columbia_contexts(in_fp):
                 doc_id = '{}_{}'.format(line_idx, year)
                 doc_contexts = get_all_contexts(context_extractor, doc_id, doc_string, sfs, lfs)
                 contexts += doc_contexts
-                context_ct += len(doc_contexts)
-                if len(doc_contexts) > 0:
-                    print('New Context Count={}'.format(context_ct))
                 doc_string = ''
             else:
                 doc_string += line
-        out_fn = 'data/columbia_chunks/columbia_prototype_contexts_{}.csv'.format(year)
         df = pd.DataFrame(contexts, columns=['form', 'doc_id', 'context'])
         print('Saving {} contexts from Columbia discharge summaries for year={}.'.format(df.shape[0], year))
-        df.to_csv(out_fn, index=False)
+        df.to_csv(year_out_fn, index=False)
     print('Done processing Columbia discharge summaries!')
 
-    out_fn = 'data/columbia_prototype_contexts.csv'
     columbia_chunk_dfs = []
     columbia_chunks = os.listdir(tmp_batch_dir)
     print('Collecting chunks of processed Columbia contexts...')

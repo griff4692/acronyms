@@ -5,7 +5,7 @@ import os
 import pandas as pd
 
 from utils import jaccard_overlap
-from source_mining.umls.extract_expansions import search
+from expansion_etl.source_mining.umls.extract_expansions import search
 
 
 apikey = 'b3a1775f-e041-43c8-b529-03c843ff8934'

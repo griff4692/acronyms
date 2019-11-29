@@ -10,11 +10,10 @@ NUM_LAYERS = 13
 EMBED_SIZE = 768
 
 # Original data file
-ORIGINAL_DATA_FILE = '/home/ga2530/acronyms/expansion_etl/data/derived/sampled_prototype_contexts.csv'
+ORIGINAL_DATA_FILE = '/home/ga2530/acronyms/prototype/context_extraction/data/downsampled_prototype_contexts.csv'
 MAX_WINDOW_SIZE = 10
 SF_IDENTIFIER = 'TARGETWORD'
 
 # Data files (expects pandas dataframe)
-DATA_FILE = '/home/ga2530/acronyms/expansion_etl/data/derived/sampled_prototype_contexts_trimmed.csv'
+DATA_FILE = '/home/ga2530/acronyms/prototype/context_extraction/data/downsampled_prototype_contexts_trimmed.csv'
 BATCH_SIZE = 100
-
