@@ -20,9 +20,10 @@ class DimensionalityReducer:
     This class encapsulates all the logic required to reduce the dimensions of the BERT embeddings
     """
 
-    def __init__(self, technique: ReductionTechnique):
-        self.pca = PCA(n_components=300)
+    def __init__(self, technique: ReductionTechnique, n_components, lf_count):
+        self.pca = PCA(n_components=n_components)
         self.technique = technique
+        self.lf_count = lf_count
         self.embeddings = None
         self.reduced_embeddings = None
         self.embeddings_to_file_map = None
@@ -88,12 +89,34 @@ class DimensionalityReducer:
         plt.title('BERT Embedding Dimensions Variance')
         plt.show()
 
+    def visualize_all_reduced_embeddings(self):
+        """
+        This method is used to test the separation hypothesis regarding LFs and SFs
+        :return: None
+        """
+        scaler = MinMaxScaler(feature_range=[0, 1])
+        embeddings_rescaled = scaler.fit_transform(self.embeddings)
+        pca = PCA(n_components=2)
+        reduced_embeddings = pca.fit_transform(embeddings_rescaled)
+        plt.figure()
+        lf_index = self.embeddings_to_file_map[self.lf_count - 1][0] + self.embeddings_to_file_map[self.lf_count - 1][1]
+        plt.scatter(reduced_embeddings[:lf_index, 0], reduced_embeddings[:lf_index, 1], c='r')  # For LFs
+        plt.scatter(reduced_embeddings[lf_index:, 0], reduced_embeddings[lf_index:, 1], c='y')  # For SFs
+        plt.xlabel('First Principal Component')
+        plt.ylabel('Second Principal Component')
+        plt.title('Scatter of First Two Principal Components for LFs and SFs')
+        plt.legend(loc='upper left')
+        # plt.show()
+        plt.savefig('lf_and_sf_all_files.png')
+
 
 if __name__ == '__main__':
     files = glob.glob('embeddings/lf_embeddings/*.npy')
+    lf_files = len(files)
     files.extend(glob.glob('embeddings/sf_embeddings/*.npy'))
-    reducer = DimensionalityReducer(ReductionTechnique.PCA)
+    reducer = DimensionalityReducer(ReductionTechnique.PCA, 300, lf_files)
     reducer.get_all_embeddings(files)
-    reducer.optimize_reduced_dimensions_pca()
+    # reducer.optimize_reduced_dimensions_pca()
+    reducer.visualize_all_reduced_embeddings()
     # reducer.reduce_dimensions()
     # reducer.write_reduced_embeddings()
