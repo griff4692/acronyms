@@ -1,7 +1,5 @@
 import json
-import pickle
 import os
-import shutil
 
 import argparse
 import random
@@ -11,39 +9,9 @@ from scipy import spatial
 from scipy.stats import norm
 from tqdm import tqdm
 
-from utils import render_args
+from params import SerializedParams
+from utils import render_args, safe_multiply
 from vocab import Vocab
-
-
-class SerializedParams:
-    def __init__(self, outpath):
-        self.outpath = outpath
-        self.param_names = []
-        if os.path.exists(outpath):
-            print('Clearing previous contents of {}'.format(outpath))
-            shutil.rmtree(outpath, ignore_errors=True)
-        os.mkdir(outpath)
-
-    def register_param(self, name, value):
-        assert name not in self.param_names
-        self.param_names.append(name)
-        setattr(self, name, value)
-
-    def to_disc(self, epoch):
-        dict = {}
-        for param in self.param_names:
-            dict[param] = getattr(self, param)
-        with open(os.path.join(self.outpath, 'params_{}.pkl'.format(epoch)), 'wb') as fd:
-            pickle.dump(self, fd)
-
-    @classmethod
-    def from_disc(cls, fp):
-        sm = SerializedParams()
-        with open(fp) as fd:
-            dict = pickle.load(fd)
-        for k, v in dict.items():
-            sm.register_param(k, v)
-        return sm
 
 
 def compute_log_joint(args, sfs, data, betas, beta_priors, expansion_assignments, expansion_context_means,
@@ -68,25 +36,16 @@ def compute_log_joint(args, sfs, data, betas, beta_priors, expansion_assignments
     return log_joint_normalized
 
 
-def safe_multiply(a, b):
-    return np.exp(np.log(a + 1e-5) + np.log(b + 1e-5))
+def log_context_likelihood(context_likelihood_var, expansion_means, context_vec):
+    return sum(norm(expansion_means, context_likelihood_var).logpdf(context_vec))
 
 
-def log_context_likelihood(args, expansion_means, context_vec):
-    if args.use_cosine_likelihood:
-        distance = spatial.distance.cosine(expansion_means, context_vec)
-        distance_normalized = 0.5 * distance + 0.5
-        return np.log(distance_normalized)
-    return sum(norm(expansion_means, args.context_likelihood_var).logpdf(context_vec))
-
-
-def sample_expansion_term(num_expansions, betas, expansion_context_means):
+def sample_expansion_term(likelihood_var, sf, ce, num_expansions, betas, expansion_context_means, take_argmax=False):
     # Re-sample expansion assignment probabilities
-    V = sf_vocab[sf].size()
-    expansion_assignment_log_probs = np.zeros([num_expansions, ])
+    expansion_assignment_log_probs = np.zeros([num_expansions,])
     for v in range(num_expansions):
         expansion_ll = np.log(betas[sf][v])
-        context_expansion_ll = log_context_likelihood(args, expansion_context_means[sf][v], ce)
+        context_expansion_ll = log_context_likelihood(likelihood_var, expansion_context_means[sf][v], ce)
         expansion_assignment_log_probs[v] = expansion_ll + context_expansion_ll
 
     # log normalization trick to avoid precision underflow/overflow
@@ -94,7 +53,8 @@ def sample_expansion_term(num_expansions, betas, expansion_context_means):
     max_lprob = expansion_assignment_log_probs.max()
     expansion_assignment_probs = np.exp(expansion_assignment_log_probs - max_lprob)
     expansion_assignment_probs_norm = expansion_assignment_probs / expansion_assignment_probs.sum()
-    new_expansion_assignment = np.random.choice(np.arange(num_expansions), p=expansion_assignment_probs_norm)
+    new_expansion_assignment = (np.argmax(expansion_assignment_probs_norm) if take_argmax else
+                                np.random.choice(np.arange(num_expansions), p=expansion_assignment_probs_norm))
     return new_expansion_assignment
 
 
@@ -133,7 +93,6 @@ if __name__ == '__main__':
     # Model Parameters
     parser.add_argument('--max_n', default=10000000, type=int, help='Maximum examples on which to run model.')
     parser.add_argument('-random_expansion_priors', action='store_true', default=False)
-    parser.add_argument('-use_cosine_likelihood', action='store_true', default=False)
     parser.add_argument('--sf_exclude', default=',', help='Comma-delimited list of prototype SFs to ignore.')
     parser.add_argument('-reduced_dims', action='store_true', default=False, help='Use PCA transformed BERT vectors')
 
@@ -192,10 +151,13 @@ if __name__ == '__main__':
 
     # Register params and prepare directory
     serialized_params = SerializedParams(outpath=os.path.join('experiments', args.experiment))
+    arg_dict = [{k: getattr(args, k)} for k in vars(args)]
+    serialized_params.register_param('args', args)
     serialized_params.register_param('betas', betas)
     serialized_params.register_param('beta_priors', beta_priors)
     serialized_params.register_param('expansion_context_means', expansion_context_means)
     serialized_params.register_param('expansion_context_mean_priors', expansion_context_mean_priors)
+    serialized_params.register_param('sf_vocab', sf_vocab)
 
     # Load data
     data = []
@@ -243,7 +205,8 @@ if __name__ == '__main__':
 
         for n in tqdm(range(len(train_data))):
             (sf, _, _, ce) = train_data[n]
-            new_expansion_assignment = sample_expansion_term(sf_vocab[sf].size(), betas, expansion_context_means)
+            new_expansion_assignment = sample_expansion_term(args.context_likelihood_var, sf, ce, sf_vocab[sf].size(),
+                                                             betas, expansion_context_means)
             train_expansion_assignments[n] = new_expansion_assignment
 
             # Update the assignment mean sums
@@ -276,7 +239,8 @@ if __name__ == '__main__':
         # Re-assign validation data
         for n in range(len(val_data)):
             (sf, _, _, ce) = val_data[n]
-            new_expansion_assignment = sample_expansion_term(sf_vocab[sf].size(), betas, expansion_context_means)
+            new_expansion_assignment = sample_expansion_term(args.context_likelihood_var, sf, ce, sf_vocab[sf].size(),
+                                                             betas, expansion_context_means)
             val_expansion_assignments[n] = new_expansion_assignment
         val_log_joint = compute_log_joint(
             args, sfs, val_data, betas, beta_priors, val_expansion_assignments, expansion_context_means,
