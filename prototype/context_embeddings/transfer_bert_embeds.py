@@ -5,9 +5,9 @@ import json
 import torch
 
 if __name__ == '__main__':
-    bert_data = torch.load('/home/ga2530/acronyms/context_embeddings/data/embeddings_parsed.dict')
+    bert_data = torch.load('/home/ga2530/acronyms/prototype/context_embeddings/data/embeddings_parsed.dict')
     df = pd.read_csv(
-        '/home/ga2530/acronyms/expansion_etl/data/derived/sampled_prototype_contexts_trimmed.csv')
+        '/home/ga2530/acronyms/prototype/context_extraction/data/downsampled_prototype_contexts_trimmed.csv')
     N = df.shape[0]
     EMBED_DIM = 768
     embeds = np.zeros([N, EMBED_DIM])
@@ -20,6 +20,6 @@ if __name__ == '__main__':
         keys.append(key)
         if (ct + 1) % 1000 == 0 or (ct + 1) == N:
             print('Processed {} out of {} rows'.format(ct + 1, N))
-    np.save('/home/ga2530/acronyms/context_embeddings/data/embeddings.npy', embeds)
-    json.dump(keys, open('/home/ga2530/acronyms/context_embeddings/data/key_order.json', 'w'))
+    np.save('/home/ga2530/acronyms/prototype/context_embeddings/data/embeddings.npy', embeds)
+    json.dump(keys, open('/home/ga2530/acronyms/prototype/context_embeddings/data/key_order.json', 'w'))
 

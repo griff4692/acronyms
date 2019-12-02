@@ -12,7 +12,7 @@ if __name__ == '__main__':
     with open('data/embeddings.npy', 'rb') as fd:
         embeddings = np.load(fd)
 
-    acronyms_df = pd.read_csv('../expansion_etl/data/derived/prototype_acronym_expansions_w_counts.csv')
+    acronyms_df = pd.read_csv('../context_extraction/data/merged_prototype_expansions_w_counts.csv')
     acronyms_df = acronyms_df[acronyms_df['lf_count'] > 0]
     sfs = acronyms_df['sf'].unique().tolist()
     lfs = acronyms_df['lf'].unique().tolist()

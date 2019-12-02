@@ -8,7 +8,7 @@ PROCESS_EMBED_LAYERS = {
     'last_layers': lambda x: x[-4:].mean(0).data.numpy()
 }
 SELECTION_METHOD = 'last_layers'
-EMBEDDING_PATH = '/home/ga2530/acronyms/context_embeddings/data/embeddings.dict'
+EMBEDDING_PATH = '/home/ga2530/acronyms/prototype/context_embeddings/data/embeddings.dict'
 def get_idx_to_embedding():
     data = []
     total_len = 0
@@ -27,4 +27,4 @@ def get_idx_to_embedding():
     return idx_to_embedding
 
 d = get_idx_to_embedding()
-torch.save(d, '/home/ga2530/acronyms/context_embeddings/data/embeddings_parsed.dict')
+torch.save(d, '/home/ga2530/acronyms/prototype/context_embeddings/data/embeddings_parsed.dict')

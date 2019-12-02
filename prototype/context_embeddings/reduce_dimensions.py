@@ -111,12 +111,12 @@ class DimensionalityReducer:
 
 
 if __name__ == '__main__':
-    files = glob.glob('embeddings/lf_embeddings/*.npy')
+    files = glob.glob('data/lf_embeddings/*.npy')
     lf_files = len(files)
-    files.extend(glob.glob('embeddings/sf_embeddings/*.npy'))
-    reducer = DimensionalityReducer(ReductionTechnique.PCA, 300, lf_files)
+    files.extend(glob.glob('data/sf_embeddings/*.npy'))
+    reducer = DimensionalityReducer(ReductionTechnique.PCA, 100, lf_files)
     reducer.get_all_embeddings(files)
     # reducer.optimize_reduced_dimensions_pca()
     reducer.visualize_all_reduced_embeddings()
-    # reducer.reduce_dimensions()
-    # reducer.write_reduced_embeddings()
+    reducer.reduce_dimensions()
+    reducer.write_reduced_embeddings()

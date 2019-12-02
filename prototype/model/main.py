@@ -100,11 +100,12 @@ def sample_expansion_term(num_expansions, betas, expansion_context_means):
 
 def instantiate_context_priors(args, sf_vocab):
     # Look up sf in ../context_embeddings/data/lf_embeddings
+    reduce_str = '_reduced' if args.reduced_dims else ''
     init_context_means = []
     priors = []
     for i in range(sf_vocab.size()):
         lf = sf_vocab.get_token(i)
-        fn = '../context_embeddings/data/lf_embeddings/{}.npy'.format(lf)
+        fn = '../context_embeddings/data/lf_embeddings/{}{}.npy'.format(lf, reduce_str)
         vec = np.random.normal(
             loc=args.context_prior_mean, scale=args.context_prior_var, size=(args.embed_dim, ))  # |V| x embed_dim
         prior = np.zeros([args.embed_dim, ])
@@ -112,8 +113,8 @@ def instantiate_context_priors(args, sf_vocab):
             with open(fn, 'rb') as fd:
                 vectors = np.load(fd)
             if len(vectors) > 0 and False:
-                vec = np.tanh(vectors.mean(0))
-                prior = vec
+                vec = vectors.mean(0)
+                prior = vectors.mean(0)
         init_context_means.append(vec)
         priors.append(prior)
     return np.array(init_context_means), priors
@@ -123,18 +124,18 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser('Automatic Acronym Expansion')
     # Data Path Arguments
     parser.add_argument('--acronyms_fn',
-                        default='../expansion_etl/data/derived/prototype_acronym_expansions_w_counts.csv')
-    parser.add_argument('--semgroups_fn', default='../expansion_etl/data/original/umls_semantic_groups.txt')
+                        default='../context_extraction/data/merged_prototype_expansions_w_counts.csv')
+    parser.add_argument('--semgroups_fn', default='../../expansion_etl/data/original/umls_semantic_groups.txt')
 
     # Experimental Parameters
     parser.add_argument('--experiment', default='debug', help='name of experiment')
 
     # Model Parameters
-    parser.add_argument('--max_n', default=1000, type=int, help='Maximum examples on which to run model.')
-    parser.add_argument('--embed_dim', default=768, type=int, help='Fixed by BERT embedding dim')
+    parser.add_argument('--max_n', default=10000000, type=int, help='Maximum examples on which to run model.')
     parser.add_argument('-random_expansion_priors', action='store_true', default=False)
     parser.add_argument('-use_cosine_likelihood', action='store_true', default=False)
-    parser.add_argument('--sf_exclude', default='MD,SOB', help='Comma-delimited list of prototype SFs to ignore.')
+    parser.add_argument('--sf_exclude', default=',', help='Comma-delimited list of prototype SFs to ignore.')
+    parser.add_argument('-reduced_dims', action='store_true', default=False, help='Use PCA transformed BERT vectors')
 
     # Model Distribution Hyperparameters
     parser.add_argument('--expansion_prior', type=float, default=1.0)
@@ -144,6 +145,8 @@ if __name__ == '__main__':
     parser.add_argument('--context_likelihood_var', type=float, default=1.0)
 
     args = parser.parse_args()
+    # Fixed for now based on pre-processing
+    args.embed_dim = 100 if args.reduced_dims else 768
     render_args(args)
 
     semgroup_vocab = Vocab('semgroups')
@@ -196,8 +199,9 @@ if __name__ == '__main__':
 
     # Load data
     data = []
+    reduce_str = '_reduced' if args.reduced_dims else ''  # Use PCA vectors or not
     for sf in sfs:
-        embed_fn = '../context_embeddings/data/sf_embeddings/{}.npy'.format(sf)
+        embed_fn = '../context_embeddings/data/sf_embeddings/{}{}.npy'.format(sf, reduce_str)
         key_fn = '../context_embeddings/data/sf_embeddings/{}_keys.json'.format(sf)
         with open(embed_fn, 'rb') as fd:
             sf_vectors = np.load(fd)
@@ -227,9 +231,9 @@ if __name__ == '__main__':
         val_expansion_assignments.append(expansion_assignment)
 
     train_log_joint = compute_log_joint(args, sfs, train_data, betas, beta_priors, train_expansion_assignments,
-                                  expansion_context_means, expansion_context_mean_priors)
-    val_log_joint = compute_log_joint(args, sfs, val_data, betas, beta_priors, val_expansion_assignments,
                                         expansion_context_means, expansion_context_mean_priors)
+    val_log_joint = compute_log_joint(args, sfs, val_data, betas, beta_priors, val_expansion_assignments,
+                                      expansion_context_means, expansion_context_mean_priors)
     print('Train Log Joint={}, Val Log Joint={} at Iteration {}'.format(train_log_joint, val_log_joint, 0))
 
     MAX_ITER = 1000
