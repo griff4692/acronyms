@@ -1,5 +1,6 @@
 import json
 import os
+import pickle
 
 import argparse
 import random
@@ -25,7 +26,8 @@ def compute_log_joint(args, sfs, data, betas, beta_priors, expansion_assignments
         ).sum()
 
     data_log_joint = 0.0
-    for n, (sf, _, _, ce) in enumerate(data):
+    for n, (metadata, ce) in enumerate(data):
+        sf = metadata['sf']
         expansion_assignment = expansion_assignments[n]
         data_log_joint += np.log(betas[sf][expansion_assignment])
         assignment_means = expansion_context_means[sf][expansion_assignment]
@@ -58,22 +60,23 @@ def sample_expansion_term(likelihood_var, sf, ce, num_expansions, betas, expansi
 
 
 def instantiate_context_priors(args, sf_vocab):
-    # Look up sf in ../context_embeddings/data/lf_embeddings
+    # Look up sf in ../context_embeddings/data/prototype_lf_embeddings
     reduce_str = '_reduced' if args.reduced_dims else ''
     init_context_means = []
     priors = []
     for i in range(sf_vocab.size()):
         lf = sf_vocab.get_token(i)
-        fn = '../context_embeddings/data/lf_embeddings/{}{}.npy'.format(lf, reduce_str)
+        fn = '../context_embeddings/data/prototype_lf_embeddings/{}{}.pk'.format(lf, reduce_str)
         vec = np.random.normal(
             loc=args.context_prior_mean, scale=args.context_prior_var, size=(args.embed_dim, ))  # |V| x embed_dim
         prior = np.zeros([args.embed_dim, ])
         if os.path.exists(fn) and not args.random_expansion_priors:
             with open(fn, 'rb') as fd:
-                vectors = np.load(fd)
+                vectors = pickle.load(fd)['embeddings']
             if len(vectors) > 0 and False:
-                vec = vectors.mean(0)
-                prior = vectors.mean(0)
+                vec_mean = np.array(vectors).mean(0)
+                vec = vec_mean
+                prior = vec_mean
         init_context_means.append(vec)
         priors.append(prior)
     return np.array(init_context_means), priors
@@ -137,6 +140,7 @@ if __name__ == '__main__':
     expansion_assignment_counts = {}
     expansion_context_means = {}
     expansion_context_mean_priors = {}
+    print('Setting priors...')
     for sf in sfs:
         V = sf_vocab[sf].size()
         beta_alpha_priors = np.add(np.array(sf_vocab[sf].supports), np.array([args.expansion_prior] * V))
@@ -159,19 +163,15 @@ if __name__ == '__main__':
     serialized_params.register_param('sf_vocab', sf_vocab)
 
     # Load data
+    print('Loading SF data...')
     data = []
     reduce_str = '_reduced' if args.reduced_dims else ''  # Use PCA vectors or not
     for sf in sfs:
-        embed_fn = '../context_embeddings/data/sf_embeddings/{}{}.npy'.format(sf, reduce_str)
-        key_fn = '../context_embeddings/data/sf_embeddings/{}_keys.json'.format(sf)
-        with open(embed_fn, 'rb') as fd:
-            sf_vectors = np.load(fd)
-        with open(key_fn, 'rb') as fd:
-            sf_keys = json.load(fd)
-        sf_N = sf_vectors.shape[0]
-        for i in range(sf_N):
-            # SF, line_idx, doc_id, sf_vector
-            data.append((sf, sf_keys[i][0], sf_keys[i][1], sf_vectors[i, :]))
+        data_fn = '../context_embeddings/data/prototype_sf_embeddings/{}{}.pk'.format(sf, reduce_str)
+        with open(data_fn, 'rb') as fd:
+            sf_data = pickle.load(fd)
+        for metadata, embedding in zip(sf_data['keys'], sf_data['embeddings']):
+            data.append((metadata, embedding))
     random.shuffle(data)
     if args.max_n < len(data):
         print('Shrinking data from {} to {}'.format(len(data), args.max_n))
@@ -180,14 +180,17 @@ if __name__ == '__main__':
     train_fract = 0.8
     train_split_idx = round(len(data) * 0.8)
     train_data, val_data = data[:train_split_idx], data[train_split_idx:]
+    print('Splitting into {} train and {} validation examples'.format(len(train_data), len(val_data)))
 
     # Assignment variables: first draw a topic and then draw an expansion from that topic
     train_expansion_assignments = []  # N
-    for n, (sf, _, _, ce) in enumerate(train_data):
+    for n, (metadata, ce) in enumerate(train_data):
+        sf = metadata['sf']
         expansion_assignment = np.random.randint(0, sf_vocab[sf].size(), size=1)[0]
         train_expansion_assignments.append(expansion_assignment)
     val_expansion_assignments = []  # N
-    for n, (sf, _, _, ce) in enumerate(val_data):
+    for n, (metadata, ce) in enumerate(val_data):
+        sf = metadata['sf']
         expansion_assignment = np.random.randint(0, sf_vocab[sf].size(), size=1)[0]
         val_expansion_assignments.append(expansion_assignment)
 
@@ -203,7 +206,8 @@ if __name__ == '__main__':
         serialized_params.to_disc(epoch=iter_ct)
 
         for n in tqdm(range(len(train_data))):
-            (sf, _, _, ce) = train_data[n]
+            (metadata, ce) = train_data[n]
+            sf = metadata['sf']
             new_expansion_assignment = sample_expansion_term(args.context_likelihood_var, sf, ce, sf_vocab[sf].size(),
                                                              betas, expansion_context_means)
             train_expansion_assignments[n] = new_expansion_assignment
@@ -237,7 +241,8 @@ if __name__ == '__main__':
 
         # Re-assign validation data
         for n in range(len(val_data)):
-            (sf, _, _, ce) = val_data[n]
+            (metadata, ce) = val_data[n]
+            sf = metadata['sf']
             new_expansion_assignment = sample_expansion_term(args.context_likelihood_var, sf, ce, sf_vocab[sf].size(),
                                                              betas, expansion_context_means)
             val_expansion_assignments[n] = new_expansion_assignment
