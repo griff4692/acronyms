@@ -1,33 +1,52 @@
 from collections import defaultdict
 import json
+import os
 
 import numpy as np
 import pandas as pd
 
 
-if __name__ == '__main__':
-    with open('data/key_order.json', 'r') as fd:
-        keys = json.load(fd)
-
-    with open('data/embeddings.npy', 'rb') as fd:
+def separate(data_in_fn, embed_in_fn, data_purpose, use_cached=False):
+    """
+    :param data_in_fn: filepath to dataframe with contexts, sf, forms, and other metadata
+    :param embed_in_fn: filepath to numpy array with embeddings for each corresponding form-context row in data_in_fn
+    :param use_cached: if data exists already, whether or not to recalculate / refresh
+    :return: list output directories where data has been separated by SF and LF
+    """
+    with open(embed_in_fn, 'rb') as fd:
         embeddings = np.load(fd)
 
-    acronyms_df = pd.read_csv('../context_extraction/data/merged_prototype_expansions_w_counts.csv')
-    acronyms_df = acronyms_df[acronyms_df['lf_count'] > 0]
-    sfs = acronyms_df['sf'].unique().tolist()
-    lfs = acronyms_df['lf'].unique().tolist()
+    data_df = pd.read_csv(data_in_fn)
+    sep_embeddings = defaultdict(lambda: {'keys': [], 'embeddings': []})
 
-    for forms in [('sf', sfs), ('lf', lfs)]:
-        embedding_dict = {}
-        forms_str, forms_arr = forms
-        for form in forms_arr:
-            embedding_dict[form] = defaultdict(list)
-        for key_idx, key in enumerate(keys):
-            form = key[1]
-            if form in forms_arr:
-                key = (key[0], key[2])
-                embedding_dict[form]['embeddings'].append(embeddings[key_idx, :])
-                embedding_dict[form]['keys'].append(key)
-        for form, form_dict in embedding_dict.items():
-            np.save(open('data/{}_embeddings/{}.npy'.format(forms_str, form), 'wb'), np.array(form_dict['embeddings']))
-            json.dump(form_dict['keys'], open('data/{}_embeddings/{}_keys.json'.format(forms_str, form), 'w'))
+    sfs = data_df['sf'].unique().tolist()
+    lfs = list(set(data_df['form'].unique().tolist()) - set(sfs))
+
+    print('Separating {} SFs and {} LFs'.format(len(sfs), len(lfs)))
+    out_dirs = ['data/{}_sf_embeddings'.format(data_purpose), 'data/{}_lf_embeddings'.format(data_purpose)]
+    for out_dir in out_dirs:
+        if not os.path.exists(out_dir):
+            print('Creating directory={}'.format(out_dir))
+            os.mkdir(out_dir)
+
+    is_complete = len(os.listdir(out_dirs[0])) == len(sfs) and len(os.listdir(out_dirs[1])) == len(lfs)
+    if is_complete and use_cached:
+        return out_dirs
+
+    ct_idx = 0
+    for row_idx, row in data_df.iterrows():
+        assert row_idx == ct_idx
+        embedding = embeddings[row_idx, :]
+        row = row.to_dict()
+        sep_embeddings[row['form']]['keys'].append(row)
+        sep_embeddings[row['form']]['embeddings'].append(embedding.tolist())
+        ct_idx += 1
+
+    type_strs = ['lf'] * len(lfs) + ['sf'] * len(sfs)
+    for form, form_str in zip(lfs + sfs, type_strs):
+        out_fn = 'data/{}_{}_embeddings/{}.json'.format(data_purpose, form_str, form)
+        print('Saving {} embeddings and context information to {}'.format(form, out_fn))
+        with open(out_fn, 'w') as fd:
+            json.dump(sep_embeddings[form], fd)
+
+    return out_dirs

@@ -5,7 +5,6 @@ import argparse
 import random
 import pandas as pd
 import numpy as np
-from scipy import spatial
 from scipy.stats import norm
 from tqdm import tqdm
 
@@ -30,7 +29,7 @@ def compute_log_joint(args, sfs, data, betas, beta_priors, expansion_assignments
         expansion_assignment = expansion_assignments[n]
         data_log_joint += np.log(betas[sf][expansion_assignment])
         assignment_means = expansion_context_means[sf][expansion_assignment]
-        data_log_joint += log_context_likelihood(args, assignment_means, ce)
+        data_log_joint += log_context_likelihood(args.context_likelihood_var, assignment_means, ce)
 
     log_joint_normalized = prior_log_joint + data_log_joint / float(len(data))
     return log_joint_normalized
