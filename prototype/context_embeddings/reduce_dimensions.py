@@ -89,7 +89,7 @@ class DimensionalityReducer:
         plt.title('BERT Embedding Dimensions Variance')
         plt.show()
 
-    def visualize_all_reduced_embeddings(self):
+    def visualize_all_reduced_embeddings(self, output_file_name):
         """
         This method is used to test the separation hypothesis regarding LFs and SFs
         :return: None
@@ -107,16 +107,36 @@ class DimensionalityReducer:
         plt.title('Scatter of First Two Principal Components for LFs and SFs')
         plt.legend(loc='upper left')
         # plt.show()
-        plt.savefig('lf_and_sf_all_files.png')
+        plt.savefig('lf_and_sf_' + output_file_name + '.png')
 
 
-if __name__ == '__main__':
-    files = glob.glob('data/lf_embeddings/*.npy')
-    lf_files = len(files)
-    files.extend(glob.glob('data/sf_embeddings/*.npy'))
+def dimension_reduction_driver(files, lf_files, output_file_name):
     reducer = DimensionalityReducer(ReductionTechnique.PCA, 100, lf_files)
     reducer.get_all_embeddings(files)
     # reducer.optimize_reduced_dimensions_pca()
-    reducer.visualize_all_reduced_embeddings()
+    reducer.visualize_all_reduced_embeddings(output_file_name)
     reducer.reduce_dimensions()
     reducer.write_reduced_embeddings()
+
+
+def run_complete_directory():
+    files = glob.glob('data/lf_embeddings/*.npy')
+    lf_files = len(files)
+    files.extend(glob.glob('data/sf_embeddings/*.npy'))
+    dimension_reduction_driver(files, lf_files, 'all_files')
+
+
+def run_group_by_sf(sf_lf_map: dict):
+    # sf_lf_map is a dict with keys sf file names and values a list of corresponding lf file names
+    for sf_file_name, lf_file_names in sf_lf_map.items():
+        files = []
+        for lf_file_name in lf_file_names:
+            files.append('data/lf_embeddings/' + lf_file_name + '.npy')
+        lf_files = len(files)
+        files.append('data/sf_embeddings/' + sf_file_name + '.npy')
+        dimension_reduction_driver(files, lf_files, sf_file_name[:-4])
+
+
+if __name__ == '__main__':
+    run_complete_directory()
+    # If you want to create separate plots grouped by SFs, then call run_group_by_lf with a map between sf and lf files
