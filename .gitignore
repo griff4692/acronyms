@@ -12,4 +12,4 @@ prototype/model/experiments/
 prototype/context_embeddings/embeddings/
 context_embeddings/embeddings_pca.zip
 prototype/model/data/
-
+screenlog.*
