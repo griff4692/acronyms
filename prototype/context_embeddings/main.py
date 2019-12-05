@@ -5,10 +5,22 @@ sys.path.insert(0, os.path.expanduser('~/acronyms/'))
 import argparse
 import pandas as pd
 
-from prototype.context_embeddings.embed_contexts import compute_bert_embeds
-from prototype.context_embeddings.separate_embeds import separate
+from prototype.context_embeddings.embed_contexts import embed_bert
 from prototype.context_embeddings.trim_contexts import trim
 from utils import render_args
+
+
+def compute_lf_sf_map(input_fn):
+    df = pd.read_csv(input_fn)
+    lf_sf_map = {}
+    sfs = df['sf'].unique().tolist()
+    forms = df['form'].unique().tolist()
+    for form in forms:
+        sample_form_row = df[df['form'] == form].iloc[0].to_dict()
+        if sample_form_row['form'] not in sfs:
+            lf_sf_map[sample_form_row['form']] = sample_form_row['sf']
+
+    return sfs, lf_sf_map
 
 
 def embed_contexts(args):
@@ -28,12 +40,22 @@ def embed_contexts(args):
     trimmed_fp = trim(args.sf_identifier, args.window_size, prototye_fn, use_cached=args.use_cached)
 
     print('Getting BERT embeddings for contexts...')
-    bert_fp = compute_bert_embeds(trimmed_fp, args.data_purpose, batch_size=args.batch_size, use_cached=args.use_cached)
+    full_bert_fp = embed_bert(trimmed_fp, args.data_purpose, batch_size=args.batch_size, use_cached=args.use_cached)
+    return full_bert_fp
 
-    print('Separate out BERT embeddings by LF and SF...')
-    out_dirs = separate(trimmed_fp, bert_fp, use_cached=True)
-
-    return out_dirs
+    # print('Reducing dimensions of BERT embeddings for both LF and SF...')
+    # # Create dict of sf_fn --> [lf_fn, lf_fn, ...]
+    # sf_lf_fn_map = defaultdict(list)
+    # sfs, lf_sf_map = compute_lf_sf_map(prototye_fn)
+    # lf_fns = os.listdir(lf_embed_dir)
+    # for lf_fn in lf_fns:
+    #     lf, ext = lf_fn.split('.')
+    #     sf = lf_sf_map[lf]
+    #     sf_fn = os.path.join(sf_embed_dir, '{}.{}'.format(sf, ext))
+    #     sf_lf_fn_map[sf_fn].append(os.path.join(lf_embed_dir, lf_fn))
+    # # Run PCA individually and visualize
+    # run_group_by_sf(sf_lf_fn_map)
+    # return sf_embed_dir, lf_embed_dir
 
 
 if __name__ == '__main__':
