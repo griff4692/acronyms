@@ -1,6 +1,6 @@
-import json
 import os
 import pickle
+from time import sleep
 
 import argparse
 import random
@@ -82,6 +82,20 @@ def instantiate_context_priors(args, sf_vocab):
     return np.array(init_context_means), priors
 
 
+def _dummy_data(args, sfs):
+    sf_choices = []
+    n = 100
+    sf_dict = [{'sf': sf} for sf in sfs]
+    for _ in range(n // len(sf_dict)):
+        sf_choices += sf_dict
+    sf_choices += [{'sf': sfs[0]}] * (n - len(sf_choices))
+    embeddings = np.random.normal(0, args.context_prior_var, size=(n, args.embed_dim))
+    data = []
+    for i in range(n):
+        data.append((sf_choices[i], embeddings[i, :]))
+    return data
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser('Automatic Acronym Expansion')
     # Data Path Arguments
@@ -90,6 +104,7 @@ if __name__ == '__main__':
     parser.add_argument('--semgroups_fn', default='../../expansion_etl/data/original/umls_semantic_groups.txt')
 
     # Experimental Parameters
+    parser.add_argument('-debug', action='store_true', default=False, help='Evaluate on small dummy dataset')
     parser.add_argument('--experiment', default='debug', help='name of experiment')
 
     # Model Parameters
@@ -107,7 +122,7 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
     # Fixed for now based on pre-processing
-    args.embed_dim = 100 if args.reduced_dims else 768
+    args.embed_dim = 100 if args.reduced_dims else 10 if args.debug else 768
     render_args(args)
 
     semgroup_vocab = Vocab('semgroups')
@@ -143,7 +158,8 @@ if __name__ == '__main__':
     print('Setting priors...')
     for sf in sfs:
         V = sf_vocab[sf].size()
-        beta_alpha_priors = np.add(np.array(sf_vocab[sf].supports), np.array([args.expansion_prior] * V))
+        beta_alpha_priors = np.array([args.expansion_prior] * V)
+        beta_alpha_priors = np.add(np.array(sf_vocab[sf].supports), beta_alpha_priors)
         beta_priors[sf] = beta_alpha_priors
         betas[sf] = np.random.dirichlet(beta_priors[sf])
         expansion_assignment_counts[sf] = np.zeros([V, ])
@@ -163,19 +179,22 @@ if __name__ == '__main__':
     serialized_params.register_param('sf_vocab', sf_vocab)
 
     # Load data
-    print('Loading SF data...')
-    data = []
-    reduce_str = '_reduced' if args.reduced_dims else ''  # Use PCA vectors or not
-    for sf in sfs:
-        data_fn = '../context_embeddings/data/prototype_sf_embeddings/{}{}.pk'.format(sf, reduce_str)
-        with open(data_fn, 'rb') as fd:
-            sf_data = pickle.load(fd)
-        for metadata, embedding in zip(sf_data['keys'], sf_data['embeddings']):
-            data.append((metadata, embedding))
-    random.shuffle(data)
-    if args.max_n < len(data):
-        print('Shrinking data from {} to {}'.format(len(data), args.max_n))
-        data = data[:args.max_n]
+    if args.debug:
+        data = _dummy_data(args, sfs)
+    else:
+        print('Loading SF data...')
+        data = []
+        reduce_str = '_reduced' if args.reduced_dims else ''  # Use PCA vectors or not
+        for sf in sfs:
+            data_fn = '../context_embeddings/data/prototype_sf_embeddings/{}{}.pk'.format(sf, reduce_str)
+            with open(data_fn, 'rb') as fd:
+                sf_data = pickle.load(fd)
+            for metadata, embedding in zip(sf_data['keys'], sf_data['embeddings']):
+                data.append((metadata, embedding))
+        random.shuffle(data)
+        if args.max_n < len(data):
+            print('Shrinking data from {} to {}'.format(len(data), args.max_n))
+            data = data[:args.max_n]
 
     train_fract = 0.8
     train_split_idx = round(len(data) * 0.8)
@@ -234,7 +253,8 @@ if __name__ == '__main__':
                 posterior_mean_denom = (1.0 / args.context_prior_var) + (ct / args.context_likelihood_var)
                 posterior_mean = posterior_mean_num / posterior_mean_denom
                 posterior_var = 1.0 / posterior_mean_denom
-                expansion_context_means[sf][expansion_idx] = np.random.normal(loc=posterior_mean, scale=posterior_var)
+                if ct > 0:
+                    expansion_context_means[sf][expansion_idx] = np.random.normal(loc=posterior_mean, scale=posterior_var)
         train_log_joint = compute_log_joint(
             args, sfs, train_data, betas, beta_priors, train_expansion_assignments, expansion_context_means,
             expansion_context_mean_priors)
@@ -250,8 +270,9 @@ if __name__ == '__main__':
             args, sfs, val_data, betas, beta_priors, val_expansion_assignments, expansion_context_means,
             expansion_context_mean_priors)
 
+        sleep(0.1)
         print('Train Log Joint={}, Val Log Joint={} at Iteration {}'.format(train_log_joint, val_log_joint, iter_ct))
-
+        sleep(0.1)
         # Reset count variables to 0
         for sf in sfs:
             expansion_context_embed_sums[sf].fill(0)
