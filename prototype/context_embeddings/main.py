@@ -6,21 +6,9 @@ import argparse
 import pandas as pd
 
 from prototype.context_embeddings.embed_contexts import embed_bert
+from prototype.context_embeddings.reduce_dims import reduce
 from prototype.context_embeddings.trim_contexts import trim
 from utils import render_args
-
-
-def compute_lf_sf_map(input_fn):
-    df = pd.read_csv(input_fn)
-    lf_sf_map = {}
-    sfs = df['sf'].unique().tolist()
-    forms = df['form'].unique().tolist()
-    for form in forms:
-        sample_form_row = df[df['form'] == form].iloc[0].to_dict()
-        if sample_form_row['form'] not in sfs:
-            lf_sf_map[sample_form_row['form']] = sample_form_row['sf']
-
-    return sfs, lf_sf_map
 
 
 def embed_contexts(args):
@@ -41,21 +29,10 @@ def embed_contexts(args):
 
     print('Getting BERT embeddings for contexts...')
     full_bert_fp = embed_bert(trimmed_fp, args.data_purpose, batch_size=args.batch_size, use_cached=args.use_cached)
-    return full_bert_fp
 
-    # print('Reducing dimensions of BERT embeddings for both LF and SF...')
-    # # Create dict of sf_fn --> [lf_fn, lf_fn, ...]
-    # sf_lf_fn_map = defaultdict(list)
-    # sfs, lf_sf_map = compute_lf_sf_map(prototye_fn)
-    # lf_fns = os.listdir(lf_embed_dir)
-    # for lf_fn in lf_fns:
-    #     lf, ext = lf_fn.split('.')
-    #     sf = lf_sf_map[lf]
-    #     sf_fn = os.path.join(sf_embed_dir, '{}.{}'.format(sf, ext))
-    #     sf_lf_fn_map[sf_fn].append(os.path.join(lf_embed_dir, lf_fn))
-    # # Run PCA individually and visualize
-    # run_group_by_sf(sf_lf_fn_map)
-    # return sf_embed_dir, lf_embed_dir
+    print('Reducing dimensions of BERT embeddings for both LF and SF...')
+    full_reduced_fp = reduce(full_bert_fp, use_cached=args.use_cached)
+    return full_reduced_fp
 
 
 if __name__ == '__main__':

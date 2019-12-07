@@ -44,7 +44,7 @@ def embed_bert(in_fp, data_purpose, keep_case=False, batch_size=100, use_cached=
     out_merged_fn = 'data/{}_contexts_w_embeddings.pk'.format(data_purpose)
 
     if os.path.exists(out_fn) and os.path.exists(out_merged_fn) and use_cached:
-        return out_fn
+        return out_merged_fn
 
     if os.path.exists(out_fn) or os.path.exists(out_merged_fn):
         raise Exception('Please clear out {} and {} before proceeding...'.format(out_fn, out_merged_fn))
