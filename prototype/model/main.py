@@ -1,3 +1,4 @@
+from collections import defaultdict
 import os
 import pickle
 from time import sleep
@@ -59,24 +60,23 @@ def sample_expansion_term(likelihood_var, sf, ce, num_expansions, betas, expansi
     return new_expansion_assignment
 
 
-def instantiate_context_priors(args, sf_vocab):
-    # Look up sf in ../context_embeddings/data/prototype_lf_embeddings
+def instantiate_context_priors(args, sf_vocab, lf_prior_embeddings):
     reduce_str = '_reduced' if args.reduced_dims else ''
     init_context_means = []
     priors = []
     for i in range(sf_vocab.size()):
         lf = sf_vocab.get_token(i)
-        fn = '../context_embeddings/data/prototype_lf_embeddings/{}{}.pk'.format(lf, reduce_str)
         vec = np.random.normal(
             loc=args.context_prior_mean, scale=args.context_prior_var, size=(args.embed_dim, ))  # |V| x embed_dim
         prior = np.zeros([args.embed_dim, ])
-        if os.path.exists(fn) and not args.random_expansion_priors:
-            with open(fn, 'rb') as fd:
-                vectors = pickle.load(fd)['embeddings']
-            if len(vectors) > 0 and False:
-                vec_mean = np.array(vectors).mean(0)
+        if not args.random_expansion_priors:
+            if lf not in lf_prior_embeddings:
+                assert '$' in lf
+            else:
+                vec_mean = np.array(lf_prior_embeddings[lf]).mean(0)
                 vec = vec_mean
-                prior = vec_mean
+                # TODO [figure out why it's the case that setting the prior on this is so bad]
+                # prior = vec_mean
         init_context_means.append(vec)
         priors.append(prior)
     return np.array(init_context_means), priors
@@ -132,6 +132,7 @@ if __name__ == '__main__':
     acronyms = pd.read_csv(args.acronyms_fn)
     sf_vocab = {}
     sfs = acronyms['sf'].unique()
+    lfs = acronyms['lf'].unique()
     print('Removing {} from prototype SFs'.format(args.sf_exclude))
     sfs = list(set(sfs) - set(args.sf_exclude.split(',')))
     print('Creating expansion vocabularies for {} short forms'.format(len(sfs)))
@@ -141,10 +142,54 @@ if __name__ == '__main__':
         nonzero_sf_df = sf_df[sf_df['lf_count'] > 0]
         zero_sf_df = sf_df[sf_df['lf_count'] == 0]
         zero_long_forms_agg = '$'.join(zero_sf_df['lf'].unique().tolist())
+        if len(zero_long_forms_agg) == 0:
+            zero_long_forms_agg = '$'
         full_lfs_to_add = nonzero_sf_df['lf'].tolist() + [zero_long_forms_agg]
         supports = nonzero_sf_df['lf_count'].tolist() + [0]
         sf_vocab[sf].add_tokens(full_lfs_to_add, supports=supports)
         print('\tVocabulary size of {} for {}'.format(sf_vocab[sf].size(), sf))
+
+    # Load data
+    lf_prior_embeddings = defaultdict(list)
+    if args.debug:
+        args.random_expansion_priors = True
+        data = _dummy_data(args, sfs)
+        lf_prior_embeddings = {}
+    else:
+        print('Loading data...')
+        reduce_str = '_reduced' if args.reduced_dims else ''  # Use PCA vectors or not
+
+        data_fn = '../context_embeddings/data/prototype_contexts_w_embeddings.pk'
+        with open(data_fn, 'rb') as fd:
+            pickle_data = pickle.load(fd)
+        sf_data = []
+        data = []
+        N = len(pickle_data['row_idx'])
+        cols = pickle_data.keys()
+        for i in range(N):
+            metadata = {}
+            ce, sf, lf = None, None, None
+            for col in cols:
+                val = pickle_data[col][i]
+                if col == 'embeddings':
+                    ce = val
+                else:
+                    metadata[col] = pickle_data[col][i]
+            sf, form = pickle_data['sf'][i], pickle_data['form'][i]
+            if form == sf:
+                data.append((metadata, ce))
+            else:
+                assert form in lfs
+                lf_prior_embeddings[form].append(ce)
+        random.shuffle(data)
+        if args.max_n < len(data):
+            print('Shrinking data from {} to {}'.format(len(data), args.max_n))
+            data = data[:args.max_n]
+
+    train_fract = 0.8
+    train_split_idx = round(len(data) * 0.8)
+    train_data, val_data = data[:train_split_idx], data[train_split_idx:]
+    print('Splitting into {} train and {} validation examples'.format(len(train_data), len(val_data)))
 
     # Initialize latent variables
     # Expansion proportions
@@ -163,7 +208,7 @@ if __name__ == '__main__':
         beta_priors[sf] = beta_alpha_priors
         betas[sf] = np.random.dirichlet(beta_priors[sf])
         expansion_assignment_counts[sf] = np.zeros([V, ])
-        means, priors = instantiate_context_priors(args, sf_vocab[sf])
+        means, priors = instantiate_context_priors(args, sf_vocab[sf], lf_prior_embeddings)
         expansion_context_means[sf] = means
         expansion_context_mean_priors[sf] = priors
         expansion_context_embed_sums[sf] = np.zeros([V, args.embed_dim])
@@ -177,29 +222,6 @@ if __name__ == '__main__':
     serialized_params.register_param('expansion_context_means', expansion_context_means)
     serialized_params.register_param('expansion_context_mean_priors', expansion_context_mean_priors)
     serialized_params.register_param('sf_vocab', sf_vocab)
-
-    # Load data
-    if args.debug:
-        data = _dummy_data(args, sfs)
-    else:
-        print('Loading SF data...')
-        data = []
-        reduce_str = '_reduced' if args.reduced_dims else ''  # Use PCA vectors or not
-        for sf in sfs:
-            data_fn = '../context_embeddings/data/prototype_sf_embeddings/{}{}.pk'.format(sf, reduce_str)
-            with open(data_fn, 'rb') as fd:
-                sf_data = pickle.load(fd)
-            for metadata, embedding in zip(sf_data['keys'], sf_data['embeddings']):
-                data.append((metadata, embedding))
-        random.shuffle(data)
-        if args.max_n < len(data):
-            print('Shrinking data from {} to {}'.format(len(data), args.max_n))
-            data = data[:args.max_n]
-
-    train_fract = 0.8
-    train_split_idx = round(len(data) * 0.8)
-    train_data, val_data = data[:train_split_idx], data[train_split_idx:]
-    print('Splitting into {} train and {} validation examples'.format(len(train_data), len(val_data)))
 
     # Assignment variables: first draw a topic and then draw an expansion from that topic
     train_expansion_assignments = []  # N
