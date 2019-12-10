@@ -14,7 +14,7 @@ def extract_dims(embed_data):
     x, y = [], []
     for example in embed_data:
         x.append(float(example[0]))
-        x.append(float(example[1]))
+        y.append(float(example[1]))
     return x, y
 
 
@@ -69,13 +69,12 @@ if __name__ == '__main__':
                 embeddings = sf_chart_data[sf]['sf_embeddings']
             else:
                 embeddings = sf_chart_data[sf]['lf_embeddings'][value]
-
             x, y = extract_dims(embeddings)
+            xs.append(x)
+            ys.append(y)
         for x, y, value, color in zip(xs, ys, values, colors):
             plt.scatter(x, y, color=color)
-
-        plt.show()
-        break
+        plt.savefig('visualizations/{}.png'.format(sf))
 
     # plt.figure()
     # lf_index = self.embeddings_to_file_map[self.lf_count - 1][0] + self.embeddings_to_file_map[self.lf_count - 1][1]
