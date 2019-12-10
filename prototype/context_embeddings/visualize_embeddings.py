@@ -67,7 +67,6 @@ if __name__ == '__main__':
                 embeddings = sf_chart_data[sf]['sf_embeddings']
             else:
                 embeddings = sf_chart_data[sf]['lf_embeddings'][value]
-
             x, y = extract_dims(embeddings)
             xs.append(x)
             ys.append(y)
