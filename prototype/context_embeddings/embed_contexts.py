@@ -11,12 +11,15 @@ from prototype.context_embeddings.bert_config import (BERT_CONFIG_FILE, CHKPT_IN
                                                       VOCAB_FILE, WEIGHTS_BASE_PATH)
 
 
-def summarize_bert_layers(batch_embeds):
+def summarize_bert_layers(batch_embeds, layer_range='final_4'):
     """
     :param batch_embeds: tensor of batch_size x num_layers x embedding_dim
     :return: summarized batch embeddings of batch_size x embedding_dim by taking mean of last 4 layers
     """
-    sum_data = batch_embeds[:, -4:, :].mean(1).data
+    if layer_range == 'final_4':
+        sum_data = batch_embeds[:, -4:, :].mean(1).data
+    else:
+        raise Exception('Not implemented!')
     if torch.cuda.is_available():
         return sum_data.cpu().numpy()
     else:

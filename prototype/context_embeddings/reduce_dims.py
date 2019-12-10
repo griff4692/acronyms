@@ -2,7 +2,6 @@ import os
 import pickle
 
 from sklearn.decomposition import PCA
-from sklearn.preprocessing import MinMaxScaler
 
 
 def reduce(in_fp, target_dim=100, use_cached=False):
