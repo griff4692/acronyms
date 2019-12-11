@@ -7,6 +7,7 @@ import pandas as pd
 
 from prototype.context_embeddings.embed_contexts import embed_bert
 from prototype.context_embeddings.reduce_dims import reduce
+from prototype.context_embeddings.separate_by_form import separate
 from prototype.context_embeddings.trim_contexts import trim
 from utils import render_args
 
@@ -32,6 +33,11 @@ def embed_contexts(args):
 
     print('Reducing dimensions of BERT embeddings for both LF and SF...')
     full_reduced_fp = reduce(full_bert_fp, use_cached=args.use_cached)
+
+    # Separate by forms
+    print('Separating by forms for easier use...')
+    separate_fp = separate(full_bert_fp, args.data_purpose, use_cached=args.use_cached)
+
     return full_reduced_fp
 
 
